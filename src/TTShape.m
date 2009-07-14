@@ -147,6 +147,30 @@ static CGFloat kInsetWidth = 5;
   bottomRightRadius = _bottomRightRadius, bottomLeftRadius = _bottomLeftRadius;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"topLeftRadius");
+    DECODE_OBJ(@"topRightRadius");
+    DECODE_OBJ(@"bottomRightRadius");
+    DECODE_OBJ(@"bottomLeftRadius");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"topLeftRadius");
+    ENCODE_OBJ(@"topRightRadius");
+    ENCODE_OBJ(@"bottomRightRadius");
+    ENCODE_OBJ(@"bottomLeftRadius");
+    END_ENCODER();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
 + (TTRoundedRectangleShape*)shapeWithRadius:(CGFloat)radius {
@@ -275,6 +299,24 @@ static CGFloat kInsetWidth = 5;
 @synthesize radius = _radius;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"radius");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"radius");
+    END_ENCODER();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
 + (TTRoundedRightArrowShape*)shapeWithRadius:(CGFloat)radius {
@@ -378,6 +420,24 @@ static CGFloat kInsetWidth = 5;
 @implementation TTRoundedLeftArrowShape
 
 @synthesize radius = _radius;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"radius");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"radius");
+    END_ENCODER();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
@@ -511,6 +571,30 @@ static CGFloat kInsetWidth = 5;
 
 @synthesize radius = _radius, pointLocation = _pointLocation, pointAngle = _pointAngle,
             pointSize = _pointSize;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"radius");
+    DECODE_OBJ(@"pointLocation");
+    DECODE_OBJ(@"pointAngle");
+    DECODE_OBJ(@"pointSize");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"radius");
+    ENCODE_OBJ(@"pointLocation");
+    ENCODE_OBJ(@"pointAngle");
+    ENCODE_OBJ(@"pointSize");
+    END_ENCODER();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public

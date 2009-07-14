@@ -104,6 +104,24 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"next");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"next");
+    END_ENCODER();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // public
 
 - (void)draw:(TTStyleContext*)context {
@@ -190,6 +208,26 @@ static const NSInteger kDefaultLightSource = 125;
 @synthesize name = _name, style = _style;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"name");
+    DECODE_OBJ(@"style");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"name");
+    ENCODE_OBJ(@"style");
+    END_ENCODER();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
 + (TTPartStyle*)styleWithName:(NSString*)name style:(TTStyle*)stylez next:(TTStyle*)next {
@@ -246,6 +284,24 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"shape");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"shape");
+    END_ENCODER();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // TTStyle
 
 - (void)draw:(TTStyleContext*)context {
@@ -285,6 +341,25 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTInsetStyle
 
 @synthesize inset = _inset;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_EDGEINSETS(@"inset");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_EDGEINSETS(@"inset");
+    END_ENCODER();
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
@@ -335,6 +410,30 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTBoxStyle
 
 @synthesize margin = _margin, padding = _padding, minSize = _minSize, position = _position;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_EDGEINSETS(@"margin");
+    DECODE_EDGEINSETS(@"padding");
+    DECODE_SIZE(@"minSize");
+    DECODE_OBJ(@"position");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_EDGEINSETS(@"margin");
+    ENCODE_EDGEINSETS(@"padding");
+    ENCODE_SIZE(@"minSize");
+    ENCODE_OBJ(@"position");
+    END_ENCODER();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
@@ -416,6 +515,39 @@ static const NSInteger kDefaultLightSource = 125;
 @synthesize font = _font, color = _color, shadowColor = _shadowColor, shadowOffset = _shadowOffset,
             minimumFontSize = _minimumFontSize, textAlignment = _textAlignment,
             verticalAlignment = _verticalAlignment, lineBreakMode = _lineBreakMode;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"font");
+    DECODE_OBJ(@"color");
+    DECODE_OBJ(@"shadowColor");
+    DECODE_OBJ(@"minimumFontSize");
+    DECODE_OBJ(@"textAlignment");
+    DECODE_OBJ(@"verticalAlignment");
+    DECODE_OBJ(@"lineBreakMode");
+    DECODE_SIZE(@"shadowOffset");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"font");
+    ENCODE_OBJ(@"color");
+    ENCODE_OBJ(@"shadowColor");
+    ENCODE_OBJ(@"minimumFontSize");
+    ENCODE_OBJ(@"textAlignment");
+    ENCODE_OBJ(@"verticalAlignment");
+    ENCODE_OBJ(@"lineBreakMode");
+    ENCODE_SIZE(@"shadowOffset");
+    END_ENCODER();
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
@@ -616,6 +748,32 @@ static const NSInteger kDefaultLightSource = 125;
             contentMode = _contentMode, size = _size;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"imageURL");
+    DECODE_IMAGE(@"image");
+    DECODE_IMAGE(@"defaultImage");
+    DECODE_OBJ(@"contentMode");
+    DECODE_SIZE(@"size");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"imageURL");
+    ENCODE_IMAGE(@"image");
+    ENCODE_IMAGE(@"defaultImage");
+    ENCODE_OBJ(@"contentMode");
+    ENCODE_SIZE(@"size");
+    END_ENCODER();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
 + (TTImageStyle*)styleWithImageURL:(NSString*)imageURL next:(TTStyle*)next {
@@ -747,6 +905,24 @@ static const NSInteger kDefaultLightSource = 125;
 @synthesize mask = _mask;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_IMAGE(@"mask");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_IMAGE(@"mask");
+    END_ENCODER();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
 + (TTMaskStyle*)styleWithMask:(UIImage*)mask next:(TTStyle*)next {
@@ -802,6 +978,25 @@ static const NSInteger kDefaultLightSource = 125;
 @synthesize color = _color;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"color");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"color");
+    END_ENCODER();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
 + (TTSolidFillStyle*)styleWithColor:(UIColor*)color next:(TTStyle*)next {
@@ -848,6 +1043,26 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTLinearGradientFillStyle
 
 @synthesize color1 = _color1, color2 = _color2;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"color1");
+    DECODE_OBJ(@"color2");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"color1");
+    ENCODE_OBJ(@"color2");
+    END_ENCODER();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
@@ -906,6 +1121,24 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTReflectiveFillStyle
 
 @synthesize color = _color;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"color");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"color");
+    END_ENCODER();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
@@ -980,6 +1213,29 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTShadowStyle
 
 @synthesize color = _color, blur = _blur, offset = _offset;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"color");
+    DECODE_OBJ(@"blur");
+    DECODE_SIZE(@"offset");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"color");
+    ENCODE_OBJ(@"blur");
+    ENCODE_SIZE(@"offset");
+    END_ENCODER();
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
@@ -1102,6 +1358,27 @@ static const NSInteger kDefaultLightSource = 125;
 @synthesize color = _color, width = _width;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"color");
+    DECODE_OBJ(@"width");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"color");
+    ENCODE_OBJ(@"width");
+    END_ENCODER();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
 + (TTSolidBorderStyle*)styleWithColor:(UIColor*)color width:(CGFloat)width next:(TTStyle*)next {
@@ -1154,6 +1431,33 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTFourBorderStyle
 
 @synthesize top = _top, right = _right, bottom = _bottom, left = _left, width = _width;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"top");
+    DECODE_OBJ(@"right");
+    DECODE_OBJ(@"bottom");
+    DECODE_OBJ(@"left");
+    DECODE_OBJ(@"width");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"top");
+    ENCODE_OBJ(@"right");
+    ENCODE_OBJ(@"bottom");
+    ENCODE_OBJ(@"left");
+    ENCODE_OBJ(@"width");
+    END_ENCODER();
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
@@ -1250,6 +1554,30 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTBevelBorderStyle
 
 @synthesize highlight = _highlight, shadow = _shadow, width = _width, lightSource = _lightSource;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    BEGIN_DECODER();
+    DECODE_OBJ(@"highlight");
+    DECODE_OBJ(@"shadow");
+    DECODE_OBJ(@"width");
+    DECODE_OBJ(@"lightSource");
+    END_DECODER();
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    BEGIN_ENCODER();
+    ENCODE_OBJ(@"highlight");
+    ENCODE_OBJ(@"shadow");
+    ENCODE_OBJ(@"width");
+    ENCODE_OBJ(@"lightSource");
+    END_ENCODER();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject

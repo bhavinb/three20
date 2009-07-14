@@ -56,12 +56,16 @@ static TTStyleSheet* gStyleSheet = nil;
     SEL sel = NSSelectorFromString(selector);
     if ([self respondsToSelector:sel]) {
       style = [self performSelector:sel withObject:(id)state];
-      if (style) {
-        if (!_styles) {
-          _styles = [[NSMutableDictionary alloc] init];
-        }
-        [_styles setObject:style forKey:key];
+    } else {
+      // Fallback: attempt to load the style from an archive in the app bundle.
+      NSString *filename = [NSString stringWithFormat:@"%@.ttstyle", selector];
+      style = [NSKeyedUnarchiver unarchiveObjectWithFile:TTPathForBundleResource(filename)];
+    }
+    if (style) {
+      if (!_styles) {
+        _styles = [[NSMutableDictionary alloc] init];
       }
+      [_styles setObject:style forKey:key];
     }
   }
   return style;
