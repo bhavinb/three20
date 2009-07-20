@@ -11,6 +11,11 @@
 
 @implementation KLModelObject
 
+- (id)copyWithZone:(NSZone *)zone
+{
+  return [[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]] retain];
+}
+
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
 }
