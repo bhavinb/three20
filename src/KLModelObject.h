@@ -64,7 +64,7 @@ TTLOG(@"BEGIN_ENCODER() - %@", [self class]); \
 
 
 
-@interface KLModelObject : NSObject <NSCoding>
+@interface KLModelObject : NSObject <NSCoding, NSCopying>
 {
 
 }
