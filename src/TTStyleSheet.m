@@ -41,6 +41,23 @@ static TTStyleSheet* gStyleSheet = nil;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// private
+
+- (TTStyle *)styleFromAppBundleForSelector:(NSString *)selector
+{
+  // First, try to find it in the root of the app bundle
+  NSString *filename = [NSString stringWithFormat:@"%@.ttstyle", selector];
+  TTStyle *style = [NSKeyedUnarchiver unarchiveObjectWithFile:TTPathForBundleResource(filename)];
+  if (!style) {
+    // Fallback by looking for it in the Three20.bundle resource directory
+    filename = [@"Three20.bundle/styles/" stringByAppendingString:filename];
+    style = [NSKeyedUnarchiver unarchiveObjectWithFile:TTPathForBundleResource(filename)];
+  }
+  
+  return style;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // public
 
 - (TTStyle*)styleWithSelector:(NSString*)selector {
@@ -54,13 +71,9 @@ static TTStyleSheet* gStyleSheet = nil;
   TTStyle* style = [_styles objectForKey:key];
   if (!style) {
     SEL sel = NSSelectorFromString(selector);
-    if ([self respondsToSelector:sel]) {
-      style = [self performSelector:sel withObject:(id)state];
-    } else {
-      // Fallback: attempt to load the style from an archive in the app bundle.
-      NSString *filename = [NSString stringWithFormat:@"%@.ttstyle", selector];
-      style = [NSKeyedUnarchiver unarchiveObjectWithFile:TTPathForBundleResource(filename)];
-    }
+    style = [self respondsToSelector:sel]
+              ? [self performSelector:sel withObject:(id)state]
+              : [self styleFromAppBundleForSelector:selector];
     if (style) {
       if (!_styles) {
         _styles = [[NSMutableDictionary alloc] init];
