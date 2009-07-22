@@ -66,3 +66,7 @@
 #import "Three20/TTURLRequestQueue.h"
 #import "Three20/TTURLRequest.h"
 #import "Three20/TTURLResponse.h"
+
+#import "Three20/TTCalendarViewController.h"
+#import "Three20/TTCalendarTileView.h"
+#import "Three20/TTCalendarDataSource.h"

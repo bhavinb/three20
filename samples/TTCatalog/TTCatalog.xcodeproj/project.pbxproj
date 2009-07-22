@@ -13,6 +13,8 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		28C286E10D94DF7D0034E888 /* CatalogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* CatalogController.m */; };
+		53CDB44310175B4A00AE0B64 /* HolidayCalendarDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44210175B4A00AE0B64 /* HolidayCalendarDataSource.m */; };
+		53CDB44610175B8600AE0B64 /* CalendarTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44510175B8600AE0B64 /* CalendarTestController.m */; };
 		BE1288310F8973CD00F65EA2 /* StyleTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1288300F8973CD00F65EA2 /* StyleTestController.m */; };
 		BE1289C20F91811E00F65EA2 /* mask.png in Resources */ = {isa = PBXBuildFile; fileRef = BE1289C10F91811E00F65EA2 /* mask.png */; };
 		BE1D843A0F8D104B00EC8BB8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1D84390F8D104B00EC8BB8 /* QuartzCore.framework */; };
@@ -72,6 +74,10 @@
 		28C286DF0D94DF7D0034E888 /* CatalogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatalogController.h; sourceTree = "<group>"; };
 		28C286E00D94DF7D0034E888 /* CatalogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CatalogController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		53CDB44110175B4A00AE0B64 /* HolidayCalendarDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HolidayCalendarDataSource.h; sourceTree = "<group>"; };
+		53CDB44210175B4A00AE0B64 /* HolidayCalendarDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HolidayCalendarDataSource.m; sourceTree = "<group>"; };
+		53CDB44410175B8600AE0B64 /* CalendarTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarTestController.h; sourceTree = "<group>"; };
+		53CDB44510175B8600AE0B64 /* CalendarTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarTestController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE12882F0F8973CD00F65EA2 /* StyleTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleTestController.h; sourceTree = "<group>"; };
 		BE1288300F8973CD00F65EA2 /* StyleTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleTestController.m; sourceTree = "<group>"; };
@@ -152,6 +158,10 @@
 				EA108168101B3A350098AAC2 /* Tables */,
 				EA108135101B39140098AAC2 /* Models */,
 				EA108141101B39510098AAC2 /* General */,
+				53CDB44110175B4A00AE0B64 /* HolidayCalendarDataSource.h */,
+				53CDB44210175B4A00AE0B64 /* HolidayCalendarDataSource.m */,
+				53CDB44410175B8600AE0B64 /* CalendarTestController.h */,
+				53CDB44510175B8600AE0B64 /* CalendarTestController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -543,6 +553,8 @@
 				BE1288310F8973CD00F65EA2 /* StyleTestController.m in Sources */,
 				BEC5EC680F8C307E007622CD /* ButtonTestController.m in Sources */,
 				BE20A49C0FF418B2008791F4 /* TableControlsTestController.m in Sources */,
+				53CDB44310175B4A00AE0B64 /* HolidayCalendarDataSource.m in Sources */,
+				53CDB44610175B8600AE0B64 /* CalendarTestController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

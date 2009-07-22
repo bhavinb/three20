@@ -54,3 +54,24 @@
 - (NSString*)formatDay:(NSDateComponents*)today yesterday:(NSDateComponents*)yesterday;
 
 @end
+
+@interface NSDate (TTCalendarAdditions)
+
+// TODO Hide as much of this as possible in the TTCalendarModel.m 
+//      so that we don't visibly export it to client code.
+//      Also, I should prefix these method names so that there is
+//      less chance of a namespace collision with the client code.
++ (NSDate *)today;
++ (NSDate *)dateForDay:(NSUInteger)day month:(NSUInteger)month year:(NSUInteger)year; // TODO delete me after I'm done with this convenience method. It should only be needed during the initial build-out of the calendar model.
+
+- (BOOL)isToday;
+- (NSDate *)dateByMovingToFirstDayOfTheMonth;
+- (NSDate *)dateByMovingToFirstDayOfThePreviousMonth;
+- (NSDate *)dateByMovingToFirstDayOfTheFollowingMonth;
+- (NSDateComponents *)componentsForMonthDayAndYear;
+- (NSUInteger)day;
+- (NSUInteger)weekday;
+- (NSUInteger)numberOfDaysInMonth;
+
+
+@end

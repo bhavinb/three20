@@ -40,6 +40,17 @@
 
 @property(nonatomic,readonly) UIColor* thumbnailBackgroundColor;
 
+@property(nonatomic,readonly) UIColor* calendarHeaderTopColor;
+@property(nonatomic,readonly) UIColor* calendarHeaderBottomColor;
+@property(nonatomic,readonly) UIColor* calendarGridTopColor;
+@property(nonatomic,readonly) UIColor* calendarGridBottomColor;
+@property(nonatomic,readonly) UIColor* calendarTextColor;
+@property(nonatomic,readonly) UIColor* calendarTextLightColor;
+@property(nonatomic,readonly) UIColor* calendarTileDimmedOutColor;
+@property(nonatomic,readonly) UIColor* calendarGridLineHighlightColor;
+@property(nonatomic,readonly) UIColor* calendarGridLineShadowColor;
+@property(nonatomic,readonly) UIColor* calendarContentSeparatorColor;
+
 @property(nonatomic,readonly) UIFont* font;
 @property(nonatomic,readonly) UIFont* buttonFont;
 @property(nonatomic,readonly) UIFont* tableFont;
@@ -62,5 +73,6 @@
 
 - (TTStyle*)selectionFillStyle:(TTStyle*)next;
 
+- (TTStyle*)calendarTileForState:(UIControlState)state;
 
 @end

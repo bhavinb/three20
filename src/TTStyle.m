@@ -1,6 +1,7 @@
 #import "Three20/TTStyle.h"
 #import "Three20/TTShape.h"
 #import "Three20/TTURLCache.h"
+#import "Three20/TTCoding.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
@@ -104,21 +105,25 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// NSCoding
+// NSCopying
 
-- (id)initWithCoder:(NSCoder *)decoder
-{
-    BEGIN_DECODER();
-    DECODE_OBJ(@"next");
-    END_DECODER();
-    return self;
+- (id)copyWithZone:(NSZone *)zone {
+  return [[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]] retain];
 }
 
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-    BEGIN_ENCODER();
-    ENCODE_OBJ(@"next");
-    END_ENCODER();
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder {
+  if ((self = [super init])) {
+    DECODE_OBJ(@"next");    
+  }
+
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+  ENCODE_OBJ(@"next");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

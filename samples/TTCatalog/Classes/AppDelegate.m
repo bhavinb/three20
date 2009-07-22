@@ -17,6 +17,7 @@
 #import "StyleTestController.h"
 #import "ButtonTestController.h"
 #import "TabBarTestController.h"
+#import "CalendarTestController.h"
 
 @implementation AppDelegate
 
@@ -48,6 +49,7 @@
   [map from:@"tt://youTubeTest" toViewController:[YouTubeTestController class]];
   [map from:@"tt://imageTest2" toViewController:[TableImageTestController class]];
   [map from:@"tt://scrollViewTest" toViewController:[ScrollViewTestController class]];
+  [map from:@"tt://calendarTest" toViewController:[CalendarTestController class]];
 
   if (![navigator restoreViewControllers]) {
     [navigator openURL:@"tt://catalog" animated:NO];

@@ -2,6 +2,7 @@
 #import "Three20/TTStyle.h"
 #import "Three20/TTShape.h"
 #import "Three20/TTURLCache.h"
+#import "Three20/TTCalendarTileView.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -546,6 +547,46 @@
   return [UIColor colorWithWhite:0.95 alpha:1];
 }
 
+- (UIColor *)calendarHeaderTopColor {
+  return RGBCOLOR(246,246,247);
+}
+
+- (UIColor *)calendarHeaderBottomColor {
+  return RGBCOLOR(204,204,209);
+}
+
+- (UIColor *)calendarGridTopColor {
+  return RGBCOLOR(226,226,229);  
+}
+
+- (UIColor *)calendarGridBottomColor {
+  return RGBCOLOR(200,200,205);
+}
+
+- (UIColor *)calendarTextColor {
+  return RGBCOLOR(59,73,88);
+}
+
+- (UIColor *)calendarTextLightColor {
+  return RGBCOLOR(147,155,165);
+}
+
+- (UIColor *)calendarTileDimmedOutColor {
+  return RGBACOLOR(0, 0, 0, 0.25);
+}
+
+- (UIColor *)calendarGridLineHighlightColor {
+  return RGBCOLOR(159,162,172);
+}
+
+- (UIColor *)calendarGridLineShadowColor {
+  return RGBCOLOR(237,237,239);
+}
+
+- (UIColor *)calendarContentSeparatorColor {
+  return RGBCOLOR(151,154,155);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // public fonts
 
@@ -638,6 +679,20 @@
   }
 }
 
+- (TTStyle*)calendarTileWithColor:(UIColor *)color
+{
+  return [TTFourBorderStyle styleWithTop:TTSTYLEVAR(calendarGridLineHighlightColor) right:TTSTYLEVAR(calendarGridLineHighlightColor) bottom:nil left:nil width:1.f next:
+          [TTFourBorderStyle styleWithTop:TTSTYLEVAR(calendarGridLineShadowColor) right:TTSTYLEVAR(calendarGridLineShadowColor) bottom:nil left:nil width:1.f next:
+           [TTTextStyle styleWithFont:[UIFont boldSystemFontOfSize:24.f] color:color shadowColor:[UIColor whiteColor] shadowOffset:CGSizeMake(0.f, 1.f) next:nil]]];
+}
+
+- (TTStyle*)calendarTileMarkWithColor:(UIColor *)color
+{
+  return [TTInsetStyle styleWithInset:UIEdgeInsetsMake(35, 20, 6, 20) next:
+          [TTShapeStyle styleWithShape:[TTRoundedRectangleShape shapeWithRadius:TT_ROUNDED] next:
+           [TTSolidFillStyle styleWithColor:color next:nil]]];
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // public
 
@@ -668,6 +723,49 @@
 - (TTStyle*)selectionFillStyle:(TTStyle*)next {
   return [TTLinearGradientFillStyle styleWithColor1:RGBCOLOR(5,140,245)
                                     color2:RGBCOLOR(1,93,230) next:next];
+}
+
+- (TTStyle*)calendarTileForState:(UIControlState)state
+{
+  TTStyle *style = nil;
+  UIColor *markColor = nil;
+  
+  switch (state & TTCalendarTileStateMode) {
+      
+    case kTTCalendarTileTypeRegular:
+      if (state & UIControlStateSelected) {
+        style = TTSTYLE(calendar_tile_selected);
+        markColor = [UIColor whiteColor];
+      } else {
+        style = [self calendarTileWithColor:TTSTYLEVAR(calendarTextColor)];
+        markColor = TTSTYLEVAR(calendarTextColor);
+      }
+      break;
+      
+    case kTTCalendarTileTypeAdjacent:
+      style = [self calendarTileWithColor:TTSTYLEVAR(calendarTextLightColor)];
+      markColor = TTSTYLEVAR(calendarTextLightColor);
+      if (state & UIControlStateSelected) {
+        [style addStyle:[TTSolidFillStyle styleWithColor:TTSTYLEVAR(calendarTileDimmedOutColor) next:nil]];
+      }
+      break;
+      
+    case kTTCalendarTileTypeToday:
+      markColor = [UIColor whiteColor];
+      style = state & UIControlStateSelected ? TTSTYLE(calendar_tile_today_selected) : TTSTYLE(calendar_tile_today);
+      break;
+      
+    default:
+      [NSException raise:@"Cannot find calendar tile style" format:@"unknown error"];
+      break;
+  }
+  
+  if (state & TTCalendarTileStateMarked) {
+    style = [[style copy] autorelease];
+    [style addStyle:[self calendarTileMarkWithColor:markColor]];
+  }
+  
+  return style;
 }
 
 @end
