@@ -30,6 +30,58 @@ static const CGSize kTileSize = { 46.f, 46.f };
 
 @synthesize selectedTile;
 
+- (id)initWithFrame:(CGRect)frame model:(TTCalendarModel *)theModel delegate:(id<TTCalendarViewDelegate>)theDelegate
+{
+  // MobileCal uses 46px wide tiles, with a 2px inner stroke 
+  // along the top and right edges. Since there are 7 columns,
+  // the width needs to be 46*7 (322px). But the iPhone's screen
+  // is only 320px wide, so we need to make the
+  // frame extend just beyond the right edge of the screen
+  // to accomodate all 7 columns. The 7th day's 2px inner stroke
+  // will be clipped off the screen, but that's fine because
+  // MobileCal does the same thing.
+  frame.size.width = 7 * kTileSize.width;
+  
+  if (self = [super initWithFrame:frame]) {
+    
+    self.clipsToBounds = YES;
+    reusableCells = [[NSMutableArray alloc] init];
+    cellHeight = kTileSize.height;
+    model = [theModel retain];
+    delegate = theDelegate;
+    self.style = [TTLinearGradientFillStyle styleWithColor1:TTSTYLEVAR(calendarGridTopColor) color2:TTSTYLEVAR(calendarGridBottomColor) next:nil];
+    
+    // Allocate the pool of cells. Each cell represents a calendar week (a single row of 7 TTCalendarTileViews).
+    for (NSUInteger i = 0; i < kTilePoolSize; i++) {
+      TTView *cell = [[[TTView alloc] initWithFrame:CGRectMake(0.f, 0.f, self.width, cellHeight)] autorelease];
+      cell.opaque = NO;
+      cell.backgroundColor = [UIColor clearColor];
+      [self initializeCell:cell];
+      [reusableCells enqueue:cell];
+    }
+    
+    for (TTView *cell in [self dequeueAndConfigureNextBatchOfCellsForSlide:SLIDE_NONE])
+      [self addSubview:cell];
+    
+    [self selectTodayIfVisible];
+    
+    [self sizeToFit];
+  }
+  return self;
+}
+
+- (void)refresh
+{
+  if (selectedTile)
+    [delegate didSelectDate:selectedTile.date];
+  
+  for (TTView *cell in self.subviews) {
+    for (TTCalendarTileView *tile in cell.subviews) {
+      tile.marked = [delegate shouldMarkTileForDate:tile.date];
+    }
+  }
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
   UITouch *touch = [touches anyObject];
@@ -78,46 +130,6 @@ static const CGSize kTileSize = { 46.f, 46.f };
   UITouch *touch = [touches anyObject];
   TTLOG(@"cancelled touches at %@", NSStringFromCGPoint([touch locationInView:self]));
   self.selectedTile = nil;
-}
-
-- (id)initWithFrame:(CGRect)frame model:(TTCalendarModel *)theModel delegate:(id<TTCalendarViewDelegate>)theDelegate
-{
-  // MobileCal uses 46px wide tiles, with a 2px inner stroke 
-  // along the top and right edges. Since there are 7 columns,
-  // the width needs to be 46*7 (322px). But the iPhone's screen
-  // is only 320px wide, so we need to make the
-  // frame extend just beyond the right edge of the screen
-  // to accomodate all 7 columns. The 7th day's 2px inner stroke
-  // will be clipped off the screen, but that's fine because
-  // MobileCal does the same thing.
-  frame.size.width = 7 * kTileSize.width;
-  
-  if (self = [super initWithFrame:frame]) {
-    
-    self.clipsToBounds = YES;
-    reusableCells = [[NSMutableArray alloc] init];
-    cellHeight = kTileSize.height;
-    model = [theModel retain];
-    delegate = theDelegate;
-    self.style = [TTLinearGradientFillStyle styleWithColor1:TTSTYLEVAR(calendarGridTopColor) color2:TTSTYLEVAR(calendarGridBottomColor) next:nil];
-
-    // Allocate the pool of cells. Each cell represents a calendar week (a single row of 7 TTCalendarTileViews).
-    for (NSUInteger i = 0; i < kTilePoolSize; i++) {
-      TTView *cell = [[[TTView alloc] initWithFrame:CGRectMake(0.f, 0.f, self.width, cellHeight)] autorelease];
-      cell.opaque = NO;
-      cell.backgroundColor = [UIColor clearColor];
-      [self initializeCell:cell];
-      [reusableCells enqueue:cell];
-    }
-    
-    for (TTView *cell in [self dequeueAndConfigureNextBatchOfCellsForSlide:SLIDE_NONE])
-      [self addSubview:cell];
-      
-    [self selectTodayIfVisible];
-    
-    [self sizeToFit];
-  }
-  return self;
 }
 
 - (void)updateTilesInKeptCell:(TTView*)cell

@@ -27,8 +27,8 @@
 
 - (BOOL)shouldMarkTileForDate:(NSDate *)date
 {
-  // Lazy load hack. hopefully the new TTTableViewController implementation
-  // will make this unnecessary.
+  // Lazy load hack. Hopefully the new TTTableViewController/TTModel
+  // system will make this unnecessary.
   if (!self.dataSource) 
     self.dataSource = [self createDataSource];
 
@@ -53,6 +53,15 @@
 - (id<TTTableViewDataSource>)createDataSource
 {
   return [TTCalendarDataSource dataSource];
+}
+
+// -----------------------------------------------------------------------------------
+#pragma mark TTTableViewDataSource protocol
+
+- (void)dataSourceDidFinishLoad:(id<TTTableViewDataSource>)dataSource
+{
+  [super dataSourceDidFinishLoad:dataSource];
+  [[self calendarView] refresh];
 }
 
 // -----------------------------------------------------------------------------------

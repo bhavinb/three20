@@ -29,7 +29,10 @@
 
 - (id)initWithFrame:(CGRect)frame model:(TTCalendarModel *)model delegate:(id<TTCalendarViewDelegate>)delegate;
 
-// These methods should be called immediately *after* you advance/retreat the selected month in the TTCalendarModel!
+- (void)refresh;
+
+// These 2 methods should be called *after* the CalendarModel
+// has moved to the previous or following month.
 - (void)slideUp;
 - (void)slideDown;
 

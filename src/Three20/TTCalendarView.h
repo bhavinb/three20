@@ -26,7 +26,10 @@
 
 - (id)initWithFrame:(CGRect)frame delegate:(id<TTCalendarViewDelegate>)delegate model:(TTCalendarModel *)model;
 
-// these 2 methods are exposed for the delegate
+- (void)refresh;  // Requery marked tables and update the day details view (the area below the calendar grid).
+
+// These 2 methods are exposed for the delegate. They should be called 
+// *after* the CalendarModel has moved to the previous or following month.
 - (void)slideDown;
 - (void)slideUp;
 

@@ -55,6 +55,11 @@ static const CGFloat kHeaderHeight = 42.f;
   return nil;
 }
 
+- (void)refresh
+{
+  [gridView refresh];
+}
+
 - (void)slideDown { [gridView slideDown]; }
 - (void)slideUp { [gridView slideUp]; }
 
