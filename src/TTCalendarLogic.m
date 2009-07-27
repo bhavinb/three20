@@ -1,19 +1,19 @@
 //
-//  TTCalendarModel.m
+//  TTCalendarLogic.m
 //  TTCalendar
 //
 //  Created by Keith Lazuka on 7/15/09.
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import "Three20/TTCalendarModel.h"
+#import "Three20/TTCalendarLogic.h"
 
-@interface TTCalendarModel ()
+@interface TTCalendarLogic ()
 - (NSUInteger)numberOfDaysInPreviousPartialWeek;
 - (NSUInteger)numberOfDaysInFollowingPartialWeek;
 @end
 
-@implementation TTCalendarModel
+@implementation TTCalendarLogic
 
 @synthesize baseDate;
 

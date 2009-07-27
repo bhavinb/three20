@@ -8,7 +8,7 @@
 
 #import "Three20/TTView.h"
 
-@class TTCalendarTileView, TTCalendarModel;
+@class TTCalendarTileView, TTCalendarLogic;
 @protocol TTCalendarViewDelegate;
 
 //
@@ -19,7 +19,7 @@
 @interface TTCalendarGridView : TTView
 {
   id<TTCalendarViewDelegate> delegate;  // Assigned.
-  TTCalendarModel *model;
+  TTCalendarLogic *logic;
   TTCalendarTileView *selectedTile;
   NSMutableArray *reusableCells;        // The pool of reusable cells. If this runs out, the app will crash instead of dynamically allocating more views. So make this just large enough to meet your app needs, but no larger.
   CGFloat cellHeight;                   // REQUIRED! Subclasses must set this ivar! Currently requires a fixed cell height for all cells.
@@ -27,7 +27,7 @@
 
 @property (nonatomic, retain) TTCalendarTileView *selectedTile;
 
-- (id)initWithFrame:(CGRect)frame model:(TTCalendarModel *)model delegate:(id<TTCalendarViewDelegate>)delegate;
+- (id)initWithFrame:(CGRect)frame logic:(TTCalendarLogic *)logic delegate:(id<TTCalendarViewDelegate>)delegate;
 
 - (void)refresh;
 

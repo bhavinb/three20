@@ -1,5 +1,5 @@
 //
-//  TTCalendarModel.h
+//  TTCalendarLogic.h
 //  TTCalendar
 //
 //  Created by Keith Lazuka on 7/15/09.
@@ -8,7 +8,7 @@
 
 #import "Three20/TTGlobal.h"
 
-@interface TTCalendarModel : NSObject
+@interface TTCalendarLogic : NSObject
 {
   NSDate *baseDate; // The first day of the currently selected month
   NSDateFormatter *monthAndYearFormatter;

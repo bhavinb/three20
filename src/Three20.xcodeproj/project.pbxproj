@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		539A24F9101DFD0A0085BC76 /* TTCalendarLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 539A24F8101DFD0A0085BC76 /* TTCalendarLogic.m */; };
+		539A24FD101DFD550085BC76 /* TTCalendarLogic.h in Headers */ = {isa = PBXBuildFile; fileRef = 539A24FC101DFD550085BC76 /* TTCalendarLogic.h */; };
 		53CDB44D10175C1400AE0B64 /* TTCalendarDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44710175C1400AE0B64 /* TTCalendarDataSource.m */; };
 		53CDB44E10175C1400AE0B64 /* TTCalendarGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44810175C1400AE0B64 /* TTCalendarGridView.m */; };
-		53CDB44F10175C1400AE0B64 /* TTCalendarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44910175C1400AE0B64 /* TTCalendarModel.m */; };
 		53CDB45010175C1400AE0B64 /* TTCalendarTileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44A10175C1400AE0B64 /* TTCalendarTileView.m */; };
 		53CDB45110175C1400AE0B64 /* TTCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44B10175C1400AE0B64 /* TTCalendarView.m */; };
 		53CDB45210175C1400AE0B64 /* TTCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CDB44C10175C1400AE0B64 /* TTCalendarViewController.m */; };
 		53CDB45910175C4700AE0B64 /* TTCalendarDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 53CDB45310175C4700AE0B64 /* TTCalendarDataSource.h */; };
 		53CDB45A10175C4700AE0B64 /* TTCalendarGridView.h in Headers */ = {isa = PBXBuildFile; fileRef = 53CDB45410175C4700AE0B64 /* TTCalendarGridView.h */; };
-		53CDB45B10175C4700AE0B64 /* TTCalendarModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 53CDB45510175C4700AE0B64 /* TTCalendarModel.h */; };
 		53CDB45C10175C4700AE0B64 /* TTCalendarTileView.h in Headers */ = {isa = PBXBuildFile; fileRef = 53CDB45610175C4700AE0B64 /* TTCalendarTileView.h */; };
 		53CDB45D10175C4700AE0B64 /* TTCalendarView.h in Headers */ = {isa = PBXBuildFile; fileRef = 53CDB45710175C4700AE0B64 /* TTCalendarView.h */; };
 		53CDB45E10175C4700AE0B64 /* TTCalendarViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 53CDB45810175C4700AE0B64 /* TTCalendarViewController.h */; };
@@ -180,15 +180,15 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		539A24F8101DFD0A0085BC76 /* TTCalendarLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCalendarLogic.m; sourceTree = "<group>"; };
+		539A24FC101DFD550085BC76 /* TTCalendarLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTCalendarLogic.h; path = Three20/TTCalendarLogic.h; sourceTree = "<group>"; };
 		53CDB44710175C1400AE0B64 /* TTCalendarDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCalendarDataSource.m; sourceTree = "<group>"; };
 		53CDB44810175C1400AE0B64 /* TTCalendarGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCalendarGridView.m; sourceTree = "<group>"; };
-		53CDB44910175C1400AE0B64 /* TTCalendarModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCalendarModel.m; sourceTree = "<group>"; };
 		53CDB44A10175C1400AE0B64 /* TTCalendarTileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCalendarTileView.m; sourceTree = "<group>"; };
 		53CDB44B10175C1400AE0B64 /* TTCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCalendarView.m; sourceTree = "<group>"; };
 		53CDB44C10175C1400AE0B64 /* TTCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCalendarViewController.m; sourceTree = "<group>"; };
 		53CDB45310175C4700AE0B64 /* TTCalendarDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTCalendarDataSource.h; path = Three20/TTCalendarDataSource.h; sourceTree = "<group>"; };
 		53CDB45410175C4700AE0B64 /* TTCalendarGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTCalendarGridView.h; path = Three20/TTCalendarGridView.h; sourceTree = "<group>"; };
-		53CDB45510175C4700AE0B64 /* TTCalendarModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTCalendarModel.h; path = Three20/TTCalendarModel.h; sourceTree = "<group>"; };
 		53CDB45610175C4700AE0B64 /* TTCalendarTileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTCalendarTileView.h; path = Three20/TTCalendarTileView.h; sourceTree = "<group>"; };
 		53CDB45710175C4700AE0B64 /* TTCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTCalendarView.h; path = Three20/TTCalendarView.h; sourceTree = "<group>"; };
 		53CDB45810175C4700AE0B64 /* TTCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTCalendarViewController.h; path = Three20/TTCalendarViewController.h; sourceTree = "<group>"; };
@@ -408,18 +408,18 @@
 		53CDB3C71017533300AE0B64 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
+				53CDB45810175C4700AE0B64 /* TTCalendarViewController.h */,
 				53CDB45310175C4700AE0B64 /* TTCalendarDataSource.h */,
 				53CDB45410175C4700AE0B64 /* TTCalendarGridView.h */,
-				53CDB45510175C4700AE0B64 /* TTCalendarModel.h */,
 				53CDB45610175C4700AE0B64 /* TTCalendarTileView.h */,
 				53CDB45710175C4700AE0B64 /* TTCalendarView.h */,
-				53CDB45810175C4700AE0B64 /* TTCalendarViewController.h */,
+				539A24FC101DFD550085BC76 /* TTCalendarLogic.h */,
+				53CDB44C10175C1400AE0B64 /* TTCalendarViewController.m */,
 				53CDB44710175C1400AE0B64 /* TTCalendarDataSource.m */,
 				53CDB44810175C1400AE0B64 /* TTCalendarGridView.m */,
-				53CDB44910175C1400AE0B64 /* TTCalendarModel.m */,
 				53CDB44A10175C1400AE0B64 /* TTCalendarTileView.m */,
 				53CDB44B10175C1400AE0B64 /* TTCalendarView.m */,
-				53CDB44C10175C1400AE0B64 /* TTCalendarViewController.m */,
+				539A24F8101DFD0A0085BC76 /* TTCalendarLogic.m */,
 			);
 			name = Calendar;
 			sourceTree = "<group>";
@@ -767,11 +767,11 @@
 				BEF45BC81019CA8500E9EC07 /* TTPostController.h in Headers */,
 				53CDB45910175C4700AE0B64 /* TTCalendarDataSource.h in Headers */,
 				53CDB45A10175C4700AE0B64 /* TTCalendarGridView.h in Headers */,
-				53CDB45B10175C4700AE0B64 /* TTCalendarModel.h in Headers */,
 				53CDB45C10175C4700AE0B64 /* TTCalendarTileView.h in Headers */,
 				53CDB45D10175C4700AE0B64 /* TTCalendarView.h in Headers */,
 				53CDB45E10175C4700AE0B64 /* TTCalendarViewController.h in Headers */,
 				53CDB61810178C4600AE0B64 /* TTCoding.h in Headers */,
+				539A24FD101DFD550085BC76 /* TTCalendarLogic.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -893,10 +893,10 @@
 				BEF45BC61019CA4400E9EC07 /* TTPostController.m in Sources */,
 				53CDB44D10175C1400AE0B64 /* TTCalendarDataSource.m in Sources */,
 				53CDB44E10175C1400AE0B64 /* TTCalendarGridView.m in Sources */,
-				53CDB44F10175C1400AE0B64 /* TTCalendarModel.m in Sources */,
 				53CDB45010175C1400AE0B64 /* TTCalendarTileView.m in Sources */,
 				53CDB45110175C1400AE0B64 /* TTCalendarView.m in Sources */,
 				53CDB45210175C1400AE0B64 /* TTCalendarViewController.m in Sources */,
+				539A24F9101DFD0A0085BC76 /* TTCalendarLogic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

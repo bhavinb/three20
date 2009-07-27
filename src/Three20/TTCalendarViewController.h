@@ -9,11 +9,11 @@
 #import "Three20/TTTableViewController.h"
 #import "Three20/TTCalendarView.h" // for the TTCalendarViewDelegate protocol
 
-@class TTCalendarModel;
+@class TTCalendarLogic;
 
 @interface TTCalendarViewController : TTTableViewController <TTCalendarViewDelegate>
 {
-  TTCalendarModel *model;
+  TTCalendarLogic *logic;
 }
 
 @end

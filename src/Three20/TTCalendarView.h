@@ -8,7 +8,7 @@
 
 #import "Three20/TTView.h"
 
-@class TTCalendarGridView, TTCalendarModel;
+@class TTCalendarGridView, TTCalendarLogic;
 @protocol TTCalendarViewDelegate;
 
 @interface TTCalendarView : TTView
@@ -18,13 +18,13 @@
   UITableView *tableView;       // Bottom section (details for the currently selected day)
   TTView *dropShadow;           // Below the grid and on-top-of tableView.
   id<TTCalendarViewDelegate> delegate;
-  TTCalendarModel *model;
+  TTCalendarLogic *logic;
 }
 
 @property (nonatomic, assign) id<TTCalendarViewDelegate> delegate;
 @property (nonatomic, readonly) UITableView *tableView;
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<TTCalendarViewDelegate>)delegate model:(TTCalendarModel *)model;
+- (id)initWithFrame:(CGRect)frame delegate:(id<TTCalendarViewDelegate>)delegate logic:(TTCalendarLogic *)logic;
 
 - (void)refresh;  // Requery marked tables and update the day details view (the area below the calendar grid).
 

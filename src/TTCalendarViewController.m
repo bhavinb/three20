@@ -7,7 +7,7 @@
 //
 
 #import "TTCalendarViewController.h"
-#import "TTCalendarModel.h"
+#import "TTCalendarLogic.h"
 #import "TTCalendarDataSource.h"
 
 @interface TTCalendarViewController ()
@@ -43,13 +43,13 @@
 
 - (void)showPreviousMonth
 {
-  [model retreatToPreviousMonth];
+  [logic retreatToPreviousMonth];
   [[self calendarView] slideDown];
 }
 
 - (void)showFollowingMonth
 {
-  [model advanceToFollowingMonth];
+  [logic advanceToFollowingMonth];
   [[self calendarView] slideUp];
 }
 
@@ -68,8 +68,8 @@
 - (void)loadView
 {
   self.title = @"Calendar";
-  model = [[TTCalendarModel alloc] init];
-  self.view = [[[TTCalendarView alloc] initWithFrame:TTNavigationFrame() delegate:self model:model] autorelease];
+  logic = [[TTCalendarLogic alloc] init];
+  self.view = [[[TTCalendarView alloc] initWithFrame:TTNavigationFrame() delegate:self logic:logic] autorelease];
   self.tableView = [[self calendarView] tableView];
 }
 
@@ -83,7 +83,7 @@
 
 - (void)dealloc
 {
-  [model release];
+  [logic release];
   [super dealloc];
 }
 

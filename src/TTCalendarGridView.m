@@ -10,7 +10,7 @@
 #import "Three20/TTCalendarView.h"
 #import "Three20/TTCalendarTileView.h"
 #import "Three20/TTDefaultStyleSheet.h"
-#import "Three20/TTCalendarModel.h"
+#import "Three20/TTCalendarLogic.h"
 
 #define SLIDE_NONE 0
 #define SLIDE_UP 1
@@ -30,7 +30,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
 
 @synthesize selectedTile;
 
-- (id)initWithFrame:(CGRect)frame model:(TTCalendarModel *)theModel delegate:(id<TTCalendarViewDelegate>)theDelegate
+- (id)initWithFrame:(CGRect)frame logic:(TTCalendarLogic *)theLogic delegate:(id<TTCalendarViewDelegate>)theDelegate
 {
   // MobileCal uses 46px wide tiles, with a 2px inner stroke 
   // along the top and right edges. Since there are 7 columns,
@@ -47,7 +47,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
     self.clipsToBounds = YES;
     reusableCells = [[NSMutableArray alloc] init];
     cellHeight = kTileSize.height;
-    model = [theModel retain];
+    logic = [theLogic retain];
     delegate = theDelegate;
     self.style = [TTLinearGradientFillStyle styleWithColor1:TTSTYLEVAR(calendarGridTopColor) color2:TTSTYLEVAR(calendarGridBottomColor) next:nil];
     
@@ -114,7 +114,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
   if ([hitView isKindOfClass:[TTCalendarTileView class]]) {
     TTCalendarTileView *tile = (TTCalendarTileView*)hitView;
     if (tile.belongsToAdjacentMonth) {
-      if ([tile.date timeIntervalSinceDate:model.baseDate] > 0) {
+      if ([tile.date timeIntervalSinceDate:logic.baseDate] > 0) {
         [delegate showFollowingMonth];
       } else {
         [delegate showPreviousMonth];
@@ -179,9 +179,9 @@ static const CGSize kTileSize = { 46.f, 46.f };
   NSMutableArray *nextBatchOfCells = [NSMutableArray array];
   
   // Layout and configure the visible tiles/weeks for the currently selected month.
-  NSArray *previousPartials = [model daysInFinalWeekOfPreviousMonth];
-  NSArray *regularDays = [[model daysInSelectedMonth] mutableCopy];
-  NSArray *followingPartials = [model daysInFirstWeekOfFollowingMonth];
+  NSArray *previousPartials = [logic daysInFinalWeekOfPreviousMonth];
+  NSArray *regularDays = [[logic daysInSelectedMonth] mutableCopy];
+  NSArray *followingPartials = [logic daysInFirstWeekOfFollowingMonth];
   
   NSMutableArray *allVisibleDays = [NSMutableArray array];
   [allVisibleDays addObjectsFromArray:previousPartials];
@@ -212,7 +212,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
       tile.date = date;
       tile.belongsToAdjacentMonth = [previousPartials indexOfObject:date] != NSNotFound || [followingPartials indexOfObject:date] != NSNotFound;
       tile.marked = [delegate shouldMarkTileForDate:date];
-      if ([date isEqualToDate:model.baseDate])
+      if ([date isEqualToDate:logic.baseDate])
         self.selectedTile = tile;
       [allVisibleDays removeObjectAtIndex:0];
     }
@@ -262,7 +262,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
       }
       if (!alreadyHasSelection) {
         for (TTCalendarTileView *tile in keptCell.subviews) {
-          if ([tile.date isEqualToDate:model.baseDate]) {
+          if ([tile.date isEqualToDate:logic.baseDate]) {
             self.selectedTile = tile;
             break;
           }
@@ -311,16 +311,16 @@ static const CGSize kTileSize = { 46.f, 46.f };
 
 - (void)slide:(int)direction
 {
-  // At this point, the model has already been advanced or retreated to the
+  // At this point, the calendar logic has already been advanced or retreated to the
   // following/previous month, so in order to determine whether there are 
   // any cells to keep, we need to check for a partial week in the month
   // that is sliding offscreen.
   NSArray *cells = [self dequeueAndConfigureNextBatchOfCellsForSlide:direction];
   BOOL keepOneRow = NO;
 
-  if (direction == SLIDE_UP && [[model daysInFinalWeekOfPreviousMonth] count] > 0) {
+  if (direction == SLIDE_UP && [[logic daysInFinalWeekOfPreviousMonth] count] > 0) {
     keepOneRow = YES;
-  } else if (direction == SLIDE_DOWN  && [[model daysInFirstWeekOfFollowingMonth] count] > 0) {
+  } else if (direction == SLIDE_DOWN  && [[logic daysInFirstWeekOfFollowingMonth] count] > 0) {
     keepOneRow = YES;
   }
   
@@ -348,7 +348,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
 {
   [selectedTile release];
   [reusableCells release];
-  [model release];
+  [logic release];
   [super dealloc];
 }
 

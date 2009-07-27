@@ -9,7 +9,7 @@
 #import "Three20/TTCalendarView.h"
 #import "Three20/TTCalendarGridView.h"
 #import "Three20/TTDefaultStyleSheet.h"
-#import "Three20/TTCalendarModel.h"
+#import "Three20/TTCalendarLogic.h"
 #import "Three20/TTURLCache.h"
 
 @interface TTCalendarView ()
@@ -23,14 +23,14 @@ static const CGFloat kHeaderHeight = 42.f;
 
 @synthesize delegate, tableView;
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<TTCalendarViewDelegate>)theDelegate model:(TTCalendarModel *)theModel
+- (id)initWithFrame:(CGRect)frame delegate:(id<TTCalendarViewDelegate>)theDelegate logic:(TTCalendarLogic *)theLogic
 {
   if ((self = [super initWithFrame:frame])) {
     
     delegate = theDelegate;
     
-    model = [theModel retain];
-    [model addObserver:self forKeyPath:@"selectedMonthNameAndYear" options:NSKeyValueObservingOptionNew context:NULL];
+    logic = [theLogic retain];
+    [logic addObserver:self forKeyPath:@"selectedMonthNameAndYear" options:NSKeyValueObservingOptionNew context:NULL];
     
     // Header
     TTView *headerView = [[[TTView alloc] initWithFrame:CGRectMake(0.f, 0.f, frame.size.width, kHeaderHeight)] autorelease];
@@ -51,7 +51,7 @@ static const CGFloat kHeaderHeight = 42.f;
 
 - (id)initWithFrame:(CGRect)frame
 {
-  [NSException raise:@"Incomplete initializer" format:@"TTCalendarView must be initialized with a delegate and a model. Use the initWithFrame:delegate:model: method."];
+  [NSException raise:@"Incomplete initializer" format:@"TTCalendarView must be initialized with a delegate and a TTCalendarLogic. Use the initWithFrame:delegate:logic: method."];
   return nil;
 }
 
@@ -96,7 +96,7 @@ static const CGFloat kHeaderHeight = 42.f;
   headerTitleLabel.textColor = TTSTYLEVAR(calendarTextColor);
   headerTitleLabel.shadowColor = [UIColor whiteColor];
   headerTitleLabel.shadowOffset = CGSizeMake(0.f, 1.f);
-  headerTitleLabel.text = [model selectedMonthNameAndYear];
+  headerTitleLabel.text = [logic selectedMonthNameAndYear];
   [headerView addSubview:headerTitleLabel];
   
   // Create the next month button on the right side of the view
@@ -141,7 +141,7 @@ static const CGFloat kHeaderHeight = 42.f;
   CGRect fullWidthAutomaticLayoutFrame = CGRectMake(0.f, 0.f, self.width, 0.f);
 
   // The Tile Grid
-  gridView = [[TTCalendarGridView alloc] initWithFrame:fullWidthAutomaticLayoutFrame model:model delegate:delegate];
+  gridView = [[TTCalendarGridView alloc] initWithFrame:fullWidthAutomaticLayoutFrame logic:logic delegate:delegate];
   [gridView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
   [contentView addSubview:gridView];
 
@@ -196,8 +196,8 @@ static const CGFloat kHeaderHeight = 42.f;
 
 - (void)dealloc
 {
-  [model removeObserver:self forKeyPath:@"selectedMonthNameAndYear"];
-  [model release];
+  [logic removeObserver:self forKeyPath:@"selectedMonthNameAndYear"];
+  [logic release];
   
   [headerTitleLabel release];
   [gridView removeObserver:self forKeyPath:@"frame"];

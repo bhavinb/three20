@@ -57,7 +57,7 @@
 
 @interface NSDate (TTCalendarAdditions)
 
-// TODO Hide as much of this as possible in the TTCalendarModel.m 
+// TODO Hide as much of this as possible in the TTCalendarLogic.m
 //      so that we don't visibly export it to client code.
 //      Also, I should prefix these method names so that there is
 //      less chance of a namespace collision with the client code.
