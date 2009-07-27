@@ -46,11 +46,13 @@
 }
 
 // -----------------------------------------------------------------------------------
-#pragma mark TTModelDelegate protocol
+#pragma mark TTModelViewController
 
-- (void)modelDidFinishLoad:(id<TTModel>)theModel
+// TODO: this still doesn't work right (it doesn't update until the user actually
+//       touches somewhere on the calendar--strange).
+- (void)didLoadModel
 {
-  [super modelDidFinishLoad:theModel];
+  [super didLoadModel];
   [[self calendarView] refresh];
 }
 
