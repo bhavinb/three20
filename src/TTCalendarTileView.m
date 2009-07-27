@@ -108,7 +108,7 @@
 
 - (NSString*)textForLayerWithStyle:(TTStyle*)style
 {
-  return [NSString stringWithFormat:@"%u", [date day]];
+  return [NSString stringWithFormat:@"%u", [date cc_day]];
 }
 
 #pragma mark Tile State
@@ -147,7 +147,7 @@
     [date release];
     date = [aDate retain];
     
-    if ([date isToday]) {
+    if ([date cc_isToday]) {
       [self setMode:kTTCalendarTileTypeToday];
       [self reloadStyle];
     }
@@ -164,7 +164,7 @@
   if (belongsToAdjacentMonth) {
     [self setMode:kTTCalendarTileTypeAdjacent];
   } else {
-    if ([date isToday])
+    if ([date cc_isToday])
       [self setMode:kTTCalendarTileTypeToday];
     else
       [self setMode:kTTCalendarTileTypeRegular];

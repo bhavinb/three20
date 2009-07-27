@@ -15,16 +15,16 @@ static NSMutableDictionary *holidays;
 + (void)initialize
 {
   holidays = [[NSMutableDictionary alloc] init];
-  [holidays setObject:[TTTableTextItem itemWithText:@"New Years Day"] forKey:[NSDate dateForDay:1 month:1 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Martin Luther King Day"] forKey:[NSDate dateForDay:19 month:1 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Washington's Birthday"] forKey:[NSDate dateForDay:16 month:2 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Memorial Day"] forKey:[NSDate dateForDay:25 month:5 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Independence Day"] forKey:[NSDate dateForDay:4 month:7 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Labor Day"] forKey:[NSDate dateForDay:7 month:9 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Columbus Day"] forKey:[NSDate dateForDay:12 month:10 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Veteran's Day"] forKey:[NSDate dateForDay:11 month:11 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Thanksgiving Day"] forKey:[NSDate dateForDay:26 month:11 year:2009]];
-  [holidays setObject:[TTTableTextItem itemWithText:@"Christmas Day"] forKey:[NSDate dateForDay:25 month:12 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"New Years Day"] forKey:[NSDate cc_dateForDay:1 month:1 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Martin Luther King Day"] forKey:[NSDate cc_dateForDay:19 month:1 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Washington's Birthday"] forKey:[NSDate cc_dateForDay:16 month:2 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Memorial Day"] forKey:[NSDate cc_dateForDay:25 month:5 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Independence Day"] forKey:[NSDate cc_dateForDay:4 month:7 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Labor Day"] forKey:[NSDate cc_dateForDay:7 month:9 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Columbus Day"] forKey:[NSDate cc_dateForDay:12 month:10 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Veteran's Day"] forKey:[NSDate cc_dateForDay:11 month:11 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Thanksgiving Day"] forKey:[NSDate cc_dateForDay:26 month:11 year:2009]];
+  [holidays setObject:[TTTableTextItem itemWithText:@"Christmas Day"] forKey:[NSDate cc_dateForDay:25 month:12 year:2009]];
 }
 
 - (void)loadDate:(NSDate *)date;

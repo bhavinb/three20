@@ -166,7 +166,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
 {
   for (TTView *cell in self.subviews) {
     for (TTCalendarTileView *tile in cell.subviews) {
-      if ([tile.date isToday] && !tile.belongsToAdjacentMonth) {
+      if ([tile.date cc_isToday] && !tile.belongsToAdjacentMonth) {
         self.selectedTile = tile;
         return;
       }
