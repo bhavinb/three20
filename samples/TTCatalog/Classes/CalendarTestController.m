@@ -11,12 +11,16 @@
 
 @implementation CalendarTestController
 
-// -----------------------------------------------------------------------------------
-#pragma mark TTTableViewController
-
-- (id<TTTableViewDataSource>)createDataSource
+// TODO: the client should not have to subclass TTCalendarViewController
+//       just to specify the data source. In regular code they can just
+//       set the datasource property *after* init, but in TTCatalog,
+//       maybe we can pass the dataSource as a parameter via the URL mapping system?
+- (id)init
 {
-  return [HolidayCalendarDataSource dataSource];
+  if ((self = [super init])) {
+    self.dataSource = [HolidayCalendarDataSource dataSource];
+  }
+  return self;
 }
 
 @end

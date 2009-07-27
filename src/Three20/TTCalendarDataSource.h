@@ -6,7 +6,7 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import "Three20/TTTableViewDataSource.h"
+#import "Three20/TTListDataSource.h"
 
 
 @interface TTCalendarDataSource : TTListDataSource {

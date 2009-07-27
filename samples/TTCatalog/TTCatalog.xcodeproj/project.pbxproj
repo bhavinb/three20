@@ -158,10 +158,6 @@
 				EA108168101B3A350098AAC2 /* Tables */,
 				EA108135101B39140098AAC2 /* Models */,
 				EA108141101B39510098AAC2 /* General */,
-				53CDB44110175B4A00AE0B64 /* HolidayCalendarDataSource.h */,
-				53CDB44210175B4A00AE0B64 /* HolidayCalendarDataSource.m */,
-				53CDB44410175B8600AE0B64 /* CalendarTestController.h */,
-				53CDB44510175B8600AE0B64 /* CalendarTestController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -221,6 +217,17 @@
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		539A21E0101DDBCE0085BC76 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				53CDB44110175B4A00AE0B64 /* HolidayCalendarDataSource.h */,
+				53CDB44210175B4A00AE0B64 /* HolidayCalendarDataSource.m */,
+				53CDB44410175B8600AE0B64 /* CalendarTestController.h */,
+				53CDB44510175B8600AE0B64 /* CalendarTestController.m */,
+			);
+			name = Calendar;
 			sourceTree = "<group>";
 		};
 		BEE7FD0F0F358198002788A5 /* Products */ = {
@@ -360,6 +367,7 @@
 				EA108149101B396A0098AAC2 /* YouTube Player */,
 				EA10814F101B398C0098AAC2 /* Activity Labels */,
 				EA108154101B39980098AAC2 /* Scroll View */,
+				539A21E0101DDBCE0085BC76 /* Calendar */,
 			);
 			name = General;
 			sourceTree = "<group>";

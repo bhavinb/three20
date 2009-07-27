@@ -16,22 +16,28 @@
 
 @implementation TTCalendarViewController
 
+- (id)init
+{
+    if ((self = [super init])) {
+        self.dataSource = [TTCalendarDataSource dataSource];
+    }
+    return self;
+}
+
 // -----------------------------------------
 #pragma mark TTCalendarViewDelegate protocol
 
 - (void)didSelectDate:(NSDate *)date
 {
+  // Configure the dataSource to display details for |date|.
   [(TTCalendarDataSource*)self.dataSource loadDate:date];
-  self.viewState = TTViewDataLoaded;
+
+  // Refresh the view to reflect the updated model/dataSource state.
+  [self invalidateModel];
 }
 
 - (BOOL)shouldMarkTileForDate:(NSDate *)date
 {
-  // Lazy load hack. Hopefully the new TTTableViewController/TTModel
-  // system will make this unnecessary.
-  if (!self.dataSource) 
-    self.dataSource = [self createDataSource];
-
   return [(TTCalendarDataSource*)self.dataSource hasDetailsForDate:date];
 }
 
@@ -48,19 +54,11 @@
 }
 
 // -----------------------------------------------------------------------------------
-#pragma mark TTTableViewController
+#pragma mark TTModelDelegate protocol
 
-- (id<TTTableViewDataSource>)createDataSource
+- (void)modelDidFinishLoad:(id<TTModel>)theModel
 {
-  return [TTCalendarDataSource dataSource];
-}
-
-// -----------------------------------------------------------------------------------
-#pragma mark TTTableViewDataSource protocol
-
-- (void)dataSourceDidFinishLoad:(id<TTTableViewDataSource>)dataSource
-{
-  [super dataSourceDidFinishLoad:dataSource];
+  [super modelDidFinishLoad:theModel];
   [[self calendarView] refresh];
 }
 
