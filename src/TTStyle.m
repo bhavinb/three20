@@ -549,6 +549,7 @@ static const NSInteger kDefaultLightSource = 125;
     DECODE_OBJ(@"textAlignment");
     DECODE_OBJ(@"verticalAlignment");
     DECODE_OBJ(@"lineBreakMode");
+    DECODE_OBJ(@"numberOfLines");
     DECODE_SIZE(@"shadowOffset");
     END_DECODER();
     return self;
@@ -564,6 +565,7 @@ static const NSInteger kDefaultLightSource = 125;
     ENCODE_OBJ(@"textAlignment");
     ENCODE_OBJ(@"verticalAlignment");
     ENCODE_OBJ(@"lineBreakMode");
+    ENCODE_OBJ(@"numberOfLines");
     ENCODE_SIZE(@"shadowOffset");
     END_ENCODER();
 }
@@ -742,6 +744,13 @@ static const NSInteger kDefaultLightSource = 125;
   TT_RELEASE_SAFELY(_color);
   TT_RELEASE_SAFELY(_shadowColor);
   [super dealloc];
+}
+
+- (void)setNilValueForKey:(NSString *)key {
+  if ([key isEqualToString:@"numberOfLines"])
+    self.numberOfLines = 1;
+  else
+    [super setNilValueForKey:key];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
