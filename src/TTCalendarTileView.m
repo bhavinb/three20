@@ -1,11 +1,3 @@
-//
-//  TTCalendarTileView.m
-//  TTCalendar
-//
-//  Created by Keith Lazuka on 7/9/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
-//
-
 #import "Three20/TTCalendarTileView.h"
 #import "Three20/TTDefaultStyleSheet.h"
 
@@ -55,6 +47,8 @@
   // Apple does in MobileCal, we need to extend the tile 1px
   // to the left so that it draws its left border on top of
   // the left-adjacent tile's right border.
+  // (but even this hack does not perfectly mimic the way
+  // that Apple draws the bottom border of a selected tile).
   if (!self.belongsToAdjacentMonth) {
     if (self.selected && !selected) {
       // deselection (shrink)
@@ -100,7 +94,7 @@
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-  // Always make it square to the width
+  // Always make the tile square to its width.
   return CGSizeMake(size.width, size.width);
 }
 
@@ -121,10 +115,10 @@
 
 - (void)resetState
 {
-  // reset TTCalendarTileState
+  // Teset TTCalendarTileState
   state = 0;
   
-  // reset UIControlState
+  // Reset UIControlState
   [self setSelected:NO];
   [self setHighlighted:NO];
   [self setEnabled:YES];

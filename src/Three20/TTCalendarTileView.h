@@ -1,11 +1,3 @@
-//
-//  TTCalendarTileView.h
-//  TTCalendar
-//
-//  Created by Keith Lazuka on 7/9/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
-//
-
 #import "Three20/TTStyle.h"
 
 // these values can be used with the TTCalendarTileStateMode mask
@@ -22,7 +14,18 @@ enum {
 };
 typedef UIControlState TTCalendarTileState;
 
-
+/*
+ *    TTCalendarTileView
+ *    ------------------
+ *
+ *    Private interface
+ *
+ *  As a client of the TTCalendar system you should not need to use this class directly
+ *  (it is managed by TTCalendarGridView).
+ *
+ *  A TTCalendarTileView represents a single square tile for an individual date
+ *  on the calendar.
+ */
 @interface TTCalendarTileView : UIControl <TTStyleDelegate>
 {
   NSDate *date;
@@ -30,11 +33,11 @@ typedef UIControlState TTCalendarTileState;
   TTStyle *style;
 }
 
-@property (nonatomic, retain) NSDate *date;
-@property (nonatomic) BOOL belongsToAdjacentMonth;
-@property (nonatomic) BOOL marked;
-@property (nonatomic, retain) TTStyle *style;
+@property (nonatomic, retain) NSDate *date;         // The date that this tile represents.
+@property (nonatomic) BOOL belongsToAdjacentMonth;  // YES if the tile is part of a partial week from an adjacent month (such tiles are grayed out, just like in Apple's mobile calendar app)
+@property (nonatomic) BOOL marked;                  // YES if the tile should draw a marker underneath the day number. (the mark indicates to the user that the tile's date has one or more associated events)
+@property (nonatomic, retain) TTStyle *style;       // The head of the TTStyle rendering pipeline that will draw this tile.
 
-- (void)prepareForReuse;
+- (void)prepareForReuse;                            // TTCalendarGridView manages a pool of reusable TTCalendarTileViews. This method behaves like the prepareForReuse method on the UITableViewCell class.
 
 @end

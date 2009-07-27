@@ -1,13 +1,19 @@
-//
-//  TTCalendarLogic.h
-//  TTCalendar
-//
-//  Created by Keith Lazuka on 7/15/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
-//
-
 #import "Three20/TTGlobal.h"
 
+/*
+ *    TTCalendarLogic
+ *    ------------------
+ *
+ *    Private interface
+ *
+ *  As a client of the TTCalendar system you should not need to use this class directly
+ *  (it is managed by the internal TTCalendar subsystem).
+ *
+ *  The TTCalendarLogic represents the current state of the displayed calendar month
+ *  and provides the logic for switching between months and determining which days
+ *  are in a month as well as which days are in partial weeks adjacent to the selected
+ *  month.
+ */
 @interface TTCalendarLogic : NSObject
 {
   NSDate *baseDate; // The first day of the currently selected month

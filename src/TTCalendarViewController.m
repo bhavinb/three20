@@ -1,11 +1,3 @@
-//
-//  RootViewController.m
-//  TTCalendar
-//
-//  Created by Keith Lazuka on 7/9/09.
-//  Copyright __MyCompanyName__ 2009. All rights reserved.
-//
-
 #import "TTCalendarViewController.h"
 #import "TTCalendarLogic.h"
 #import "TTCalendarDataSource.h"

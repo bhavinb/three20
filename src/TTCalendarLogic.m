@@ -1,11 +1,3 @@
-//
-//  TTCalendarLogic.m
-//  TTCalendar
-//
-//  Created by Keith Lazuka on 7/15/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
-//
-
 #import "Three20/TTCalendarLogic.h"
 
 @interface TTCalendarLogic ()

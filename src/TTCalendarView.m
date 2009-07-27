@@ -1,11 +1,3 @@
-//
-//  TTCalendarView.m
-//  TTCalendar
-//
-//  Created by Keith Lazuka on 7/9/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
-//
-
 #import "Three20/TTCalendarView.h"
 #import "Three20/TTCalendarGridView.h"
 #import "Three20/TTDefaultStyleSheet.h"
