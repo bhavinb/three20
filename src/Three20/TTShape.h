@@ -1,7 +1,6 @@
 #import "Three20/TTGlobal.h"
-#import "KLModelObject.h"
 
-@interface TTShape : KLModelObject
+@interface TTShape : NSObject <NSCoding, NSCopying>
 
 - (void)openPath:(CGRect)rect;
 - (void)closePath:(CGRect)rect;

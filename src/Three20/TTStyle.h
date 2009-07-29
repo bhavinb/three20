@@ -1,5 +1,4 @@
 #import "Three20/TTGlobal.h"
-#import "KLModelObject.h"
 
 @protocol TTStyleDelegate;
 @class TTShape, TTStyleContext;
@@ -24,7 +23,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface TTStyle : KLModelObject {
+@interface TTStyle : NSObject <NSCoding, NSCopying> {
   TTStyle* _next;
 }
 
