@@ -9,6 +9,7 @@
 
 static CGFloat kTabMargin = 10;
 static CGFloat kPadding = 10;
+static const NSInteger kMaxBadgeNumber = 99;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,9 +100,9 @@ static CGFloat kPadding = 10;
 }
 
 - (void)dealloc {
-  [_tabStyle release];
-  [_tabItems release];
-  [_tabViews release];
+  TT_RELEASE_SAFELY(_tabStyle);
+  TT_RELEASE_SAFELY(_tabItems);
+  TT_RELEASE_SAFELY(_tabViews);
   [super dealloc];
 }
 
@@ -212,7 +213,7 @@ static CGFloat kPadding = 10;
 - (void)updateOverflow {
   if (_scrollView.contentOffset.x < (_scrollView.contentSize.width-self.width)) {
     if (!_overflowRight) {
-      _overflowRight = [[TTView alloc] initWithFrame:CGRectZero];
+      _overflowRight = [[TTView alloc] init];
       _overflowRight.style = TTSTYLE(tabOverflowRight);
       _overflowRight.userInteractionEnabled = NO;
       _overflowRight.backgroundColor = [UIColor clearColor];
@@ -227,7 +228,7 @@ static CGFloat kPadding = 10;
   }
   if (_scrollView.contentOffset.x > 0) {
     if (!_overflowLeft) {
-      _overflowLeft = [[TTView alloc] initWithFrame:CGRectZero];
+      _overflowLeft = [[TTView alloc] init];
       _overflowLeft.style = TTSTYLE(tabOverflowLeft);
       _overflowLeft.userInteractionEnabled = NO;
       _overflowLeft.backgroundColor = [UIColor clearColor];
@@ -260,7 +261,7 @@ static CGFloat kPadding = 10;
     _overflowLeft = nil;
     _overflowRight = nil;
 
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    _scrollView = [[UIScrollView alloc] init];
     _scrollView.scrollEnabled = YES;
     _scrollView.scrollsToTop = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
@@ -274,9 +275,9 @@ static CGFloat kPadding = 10;
 }
 
 - (void)dealloc {
-  [_overflowLeft release];
-  [_overflowRight release];
-  [_scrollView release];
+  TT_RELEASE_SAFELY(_overflowLeft);
+  TT_RELEASE_SAFELY(_overflowRight);
+  TT_RELEASE_SAFELY(_scrollView);
   [super dealloc];
 }
 
@@ -397,7 +398,7 @@ static CGFloat kPadding = 10;
 @synthesize tabItem = _tabItem;
 
 - (id)initWithItem:(TTTabItem*)tabItem tabBar:(TTTabBar*)tabBar {
-  if (self = [self initWithFrame:CGRectZero]) {
+  if (self = [self init]) {
     _badge = nil;
     
     self.tabItem = tabItem;
@@ -406,8 +407,8 @@ static CGFloat kPadding = 10;
 }
 
 - (void)dealloc {
-  [_tabItem release];
-  [_badge release];
+  TT_RELEASE_SAFELY(_tabItem);
+  TT_RELEASE_SAFELY(_badge);
   [super dealloc];
 }
 
@@ -416,13 +417,17 @@ static CGFloat kPadding = 10;
 - (void)updateBadgeNumber {
   if (_tabItem.badgeNumber) {
     if (!_badge) {
-      _badge = [[TTLabel alloc] initWithFrame:CGRectZero];
+      _badge = [[TTLabel alloc] init];
       _badge.style = TTSTYLE(badge);
       _badge.backgroundColor = [UIColor clearColor];
       _badge.userInteractionEnabled = NO;
       [self addSubview:_badge];
     }
-    _badge.text = [NSString stringWithFormat:@"%d", _tabItem.badgeNumber];
+    if (_tabItem.badgeNumber <= kMaxBadgeNumber) {
+      _badge.text = [NSString stringWithFormat:@"%d", _tabItem.badgeNumber];
+    } else {
+      _badge.text = [NSString stringWithFormat:@"%d+", kMaxBadgeNumber];
+    }
     [_badge sizeToFit];
     
     _badge.frame = CGRectMake(self.width - _badge.width-1, 1, _badge.width, _badge.height);
@@ -484,9 +489,9 @@ static CGFloat kPadding = 10;
 }
 
 - (void)dealloc {
-  [_title release];
-  [_icon release];
-  [_object release];
+  TT_RELEASE_SAFELY(_title);
+  TT_RELEASE_SAFELY(_icon);
+  TT_RELEASE_SAFELY(_object);
   [super dealloc];
 }
 

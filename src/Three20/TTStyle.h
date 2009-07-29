@@ -31,6 +31,8 @@
 
 - (id)initWithNext:(TTStyle*)next;
 
+- (TTStyle*)next:(TTStyle*)next;
+
 - (void)draw:(TTStyleContext*)context;
 
 - (UIEdgeInsets)addToInsets:(UIEdgeInsets)insets forSize:(CGSize)size;
@@ -126,6 +128,7 @@
   UIColor* _shadowColor;
   CGSize _shadowOffset;
   CGFloat _minimumFontSize;
+  NSInteger _numberOfLines;
   UITextAlignment _textAlignment;
   UIControlContentVerticalAlignment _verticalAlignment;
   UILineBreakMode _lineBreakMode;
@@ -136,6 +139,7 @@
 @property(nonatomic,retain) UIColor* shadowColor;
 @property(nonatomic) CGFloat minimumFontSize;
 @property(nonatomic) CGSize shadowOffset;
+@property(nonatomic) NSInteger numberOfLines;
 @property(nonatomic) UITextAlignment textAlignment;
 @property(nonatomic) UIControlContentVerticalAlignment verticalAlignment;
 @property(nonatomic) UILineBreakMode lineBreakMode;
@@ -151,6 +155,13 @@
 + (TTTextStyle*)styleWithFont:(UIFont*)font color:(UIColor*)color
                 minimumFontSize:(CGFloat)minimumFontSize
                 shadowColor:(UIColor*)shadowColor shadowOffset:(CGSize)shadowOffset
+                next:(TTStyle*)next;
++ (TTTextStyle*)styleWithFont:(UIFont*)font color:(UIColor*)color
+                minimumFontSize:(CGFloat)minimumFontSize
+                shadowColor:(UIColor*)shadowColor shadowOffset:(CGSize)shadowOffset
+                textAlignment:(UITextAlignment)textAlignment
+                verticalAlignment:(UIControlContentVerticalAlignment)verticalAlignment
+                lineBreakMode:(UILineBreakMode)lineBreakMode numberOfLines:(NSInteger)numberOfLines
                 next:(TTStyle*)next;
 
 @end
@@ -289,9 +300,12 @@
 @property(nonatomic,retain) UIColor* left;
 @property(nonatomic) CGFloat width;
 
-+ (TTFourBorderStyle*)styleWithTop:(UIColor*)top right:(UIColor*)right
-                      bottom:(UIColor*)bottom left:(UIColor*)left width:(CGFloat)width
-                      next:(TTStyle*)next;
++ (TTFourBorderStyle*)styleWithTop:(UIColor*)top right:(UIColor*)right bottom:(UIColor*)bottom
+                      left:(UIColor*)left width:(CGFloat)width next:(TTStyle*)next;
++ (TTFourBorderStyle*)styleWithTop:(UIColor*)top width:(CGFloat)width next:(TTStyle*)next;
++ (TTFourBorderStyle*)styleWithRight:(UIColor*)right width:(CGFloat)width next:(TTStyle*)next;
++ (TTFourBorderStyle*)styleWithBottom:(UIColor*)bottom width:(CGFloat)width next:(TTStyle*)next;
++ (TTFourBorderStyle*)styleWithLeft:(UIColor*)left width:(CGFloat)width next:(TTStyle*)next;
 
 @end
 

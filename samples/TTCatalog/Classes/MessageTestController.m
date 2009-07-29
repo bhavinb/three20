@@ -5,33 +5,28 @@
 
 @implementation MessageTestController
 
-- (id)init {
-  if (self = [super init]) {
-    _sendTimer = nil;
-    _dataSource = nil;
-  }
-  return self;
-}
-
-- (void)dealloc {
-  [_sendTimer invalidate];
-  [_dataSource release];
-	[super dealloc];
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// private
 
-- (void)compose {
-  id recipient = [[[TTTableField alloc] initWithText:@"Alan Jones" url:TT_NULL_URL] autorelease];
-  TTMessageController* controller = [[[TTMessageController alloc] 
-    initWithRecipients:[NSArray arrayWithObject:recipient]] autorelease];
-  controller.dataSource = _dataSource;
+- (UIViewController*)composeTo:(NSString*)recipient {
+  TTTableTextItem* item = [TTTableTextItem itemWithText:recipient URL:nil];
+
+  TTMessageController* controller =
+    [[[TTMessageController alloc] initWithRecipients:[NSArray arrayWithObject:item]] autorelease];
+  controller.dataSource = [[[MockSearchDataSource alloc] init] autorelease];
   controller.delegate = self;
-  [self presentModalViewController:controller animated:YES];
+
+  return controller;
+}
+
+- (void)showPost:(UIButton*)button {
+  TTPostController* controller = [[[TTPostController alloc] init] autorelease];
+  controller.originView = button;
+  [controller showInView:self.view animated:YES];
 }
 
 - (void)cancelAddressBook {
-  [[TTNavigationCenter defaultCenter].frontViewController dismissModalViewControllerAnimated:YES];
+  [[TTNavigator navigator].visibleViewController dismissModalViewControllerAnimated:YES];
 }
 
 - (void)sendDelayed:(NSTimer*)timer {
@@ -43,7 +38,7 @@
   
   TTMessageRecipientField* toField = [fields objectAtIndex:0];
   for (id recipient in toField.recipients) {
-    UILabel* label = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
+    UILabel* label = [[[UILabel alloc] init] autorelease];
     label.backgroundColor = self.view.backgroundColor;
     label.text = [NSString stringWithFormat:@"Sent to: %@", recipient];
     [label sizeToFit];
@@ -56,6 +51,25 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSObject
+
+- (id)init {
+  if (self = [super init]) {
+    _sendTimer = nil;
+    
+    [[TTNavigator navigator].URLMap from:@"tt://compose?to=(composeTo:)"
+                                    toModalViewController:self selector:@selector(composeTo:)];
+  }
+  return self;
+}
+
+- (void)dealloc {
+  [[TTNavigator navigator].URLMap removeURL:@"tt://compose?to=(composeTo:)"];
+  [_sendTimer invalidate];
+	[super dealloc];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // UIViewController
 
 - (void)loadView {
@@ -63,14 +77,19 @@
   self.view = [[[UIView alloc] initWithFrame:appFrame] autorelease];;
   self.view.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1];
   
-  _dataSource = [[MockDataSource mockDataSource:YES] retain];
-  
   UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-  [button setTitle:@"Compose Message" forState:UIControlStateNormal];
-  [button addTarget:self action:@selector(compose)
-    forControlEvents:UIControlEventTouchUpInside];
+  [button setTitle:@"Show TTMessageController" forState:UIControlStateNormal];
+  [button addTarget:@"tt://compose?to=Alan%20Jones" action:@selector(openURL)
+          forControlEvents:UIControlEventTouchUpInside];
   button.frame = CGRectMake(20, 20, 280, 50);
   [self.view addSubview:button];
+
+  UIButton* button2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+  [button2 setTitle:@"Show TTPostController" forState:UIControlStateNormal];
+  [button2 addTarget:self action:@selector(showPost:)
+          forControlEvents:UIControlEventTouchUpInside];
+  button2.frame = CGRectMake(20, button.bottom + 20, 280, 50);
+  [self.view addSubview:button2];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -29,17 +29,30 @@
 
 - (void)shareAction {
   UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"" delegate:self
-    cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil
-    otherButtonTitles:NSLocalizedString(@"Open in Safari", @""), nil] autorelease];
+    cancelButtonTitle:TTLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil
+    otherButtonTitles:TTLocalizedString(@"Open in Safari", @""), nil] autorelease];
   [sheet showInView:self.view];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
+- (id)initWithNavigatorURL:(NSURL*)URL query:(NSDictionary*)query {
+  if (self = [self init]) {
+    NSURLRequest* request = [query objectForKey:@"request"];
+    if (request) {
+      [self openRequest:request];
+    } else {
+      [self openURL:URL];
+    }
+  }
+  return self;
+}
+
 - (id)init {
   if (self = [super init]) {
     _delegate = nil;
+    _loadingURL = nil;
     _webView = nil;
     _toolbar = nil;
     _headerView = nil;
@@ -47,12 +60,15 @@
     _forwardButton = nil;
     _stopButton = nil;
     _refreshButton = nil;
+    
+    self.hidesBottomBarWhenPushed = YES;
   }
   return self;
 }
 
 - (void)dealloc {
-  [_headerView release];
+  TT_RELEASE_SAFELY(_loadingURL);
+  TT_RELEASE_SAFELY(_headerView);
   [super dealloc];
 }
 
@@ -97,33 +113,42 @@
    UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
 
   _toolbar = [[UIToolbar alloc] initWithFrame:
-    CGRectMake(0, self.view.height - TOOLBAR_HEIGHT, self.view.width, TOOLBAR_HEIGHT)];
-  _toolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    CGRectMake(0, self.view.height - TT_ROW_HEIGHT, self.view.width, TT_ROW_HEIGHT)];
+  _toolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
   _toolbar.tintColor = TTSTYLEVAR(navigationBarTintColor);
   _toolbar.items = [NSArray arrayWithObjects:
     _backButton, space, _forwardButton, space, _refreshButton, space, actionButton, nil];
   [self.view addSubview:_toolbar];
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// TTViewController
+- (void)viewDidUnload {
+  [super viewDidUnload];
+  _webView.delegate = nil;
+  TT_RELEASE_SAFELY(_webView);
+  TT_RELEASE_SAFELY(_toolbar);
+  TT_RELEASE_SAFELY(_backButton);
+  TT_RELEASE_SAFELY(_forwardButton);
+  TT_RELEASE_SAFELY(_refreshButton);
+  TT_RELEASE_SAFELY(_stopButton);
+  TT_RELEASE_SAFELY(_activityItem);
+}
 
-- (void)unloadView {
-  [super unloadView];
-  [_webView release];
-  _webView = nil;
-  [_toolbar release];
-  _toolbar = nil;
-  [_backButton release];
-  _backButton = nil;
-  [_forwardButton release];
-  _forwardButton = nil;
-  [_refreshButton release];
-  _refreshButton = nil;
-  [_stopButton release];
-  _stopButton = nil;
-  [_activityItem release];
-  _activityItem = nil;
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// UTViewController (TTCategory)
+
+- (BOOL)persistView:(NSMutableDictionary*)state {
+  NSString* URL = self.URL.absoluteString;
+  if (URL.length) {
+    [state setObject:URL forKey:@"URL"];
+  }
+  return [super persistView:state];
+}
+
+- (void)restoreView:(NSDictionary*)state {
+  NSString* URL = [state objectForKey:@"URL"];
+  if (URL.length && ![URL isEqualToString:@"about:blank"]) {
+    [self openURL:[NSURL URLWithString:URL]];
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,12 +156,16 @@
 
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request
         navigationType:(UIWebViewNavigationType)navigationType {
+  [_loadingURL release];
+  _loadingURL = [request.URL retain];
   return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView*)webView {
-  self.title = NSLocalizedString(@"Loading...", @"");
-  self.navigationItem.rightBarButtonItem = _activityItem;
+  self.title = TTLocalizedString(@"Loading...", @"");
+  if (!self.navigationItem.rightBarButtonItem) {
+    self.navigationItem.rightBarButtonItem = _activityItem;
+  }
   [_toolbar replaceItemWithTag:3 withItem:_stopButton];
   _backButton.enabled = [_webView canGoBack];
   _forwardButton.enabled = [_webView canGoForward];
@@ -144,13 +173,18 @@
 
 
 - (void)webViewDidFinishLoad:(UIWebView*)webView {
+  TT_RELEASE_SAFELY(_loadingURL);
+  
   self.title = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-  self.navigationItem.rightBarButtonItem = nil;
+  if (self.navigationItem.rightBarButtonItem == _activityItem) {
+    self.navigationItem.rightBarButtonItem = nil;
+  }
   [_toolbar replaceItemWithTag:3 withItem:_refreshButton];
   [_webView canGoBack];
 }
 
 - (void)webView:(UIWebView*)webView didFailLoadWithError:(NSError*)error {
+  TT_RELEASE_SAFELY(_loadingURL);
   [self webViewDidFinishLoad:webView];
 }
 
@@ -159,14 +193,19 @@
 
 - (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
   if (buttonIndex == 0) {
-    [[UIApplication sharedApplication] openURL:_webView.request.URL];
+    [[UIApplication sharedApplication] openURL:self.URL];
   }
 }
  
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (NSURL*)url {
-  return _webView.request.URL;
+- (NSURL*)URL {
+  return _loadingURL ? _loadingURL : _webView.request.URL;
+}
+
+- (void)openRequest:(NSURLRequest*)request {
+  self.view;
+  [_webView loadRequest:request];
 }
 
 - (void)setHeaderView:(UIView*)headerView {
@@ -180,8 +219,8 @@
     _headerView.frame = CGRectMake(0, 0, _webView.width, _headerView.height);
 
     self.view;
-    UIView* scroller = [_webView firstViewOfClass:NSClassFromString(@"UIScroller")];
-    UIView* docView = [scroller firstViewOfClass:NSClassFromString(@"UIWebDocumentView")];
+    UIView* scroller = [_webView descendantOrSelfWithClass:NSClassFromString(@"UIScroller")];
+    UIView* docView = [scroller descendantOrSelfWithClass:NSClassFromString(@"UIWebDocumentView")];
     [scroller addSubview:_headerView];
 
     if (addingHeader) {
@@ -194,10 +233,9 @@
   }
 }
 
-- (void)openURL:(NSURL*)url {
-  self.view;
-  NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
-  [_webView loadRequest:request];
+- (void)openURL:(NSURL*)URL {
+  NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
+  [self openRequest:request];
 }
 
 @end

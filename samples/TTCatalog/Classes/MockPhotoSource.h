@@ -11,18 +11,16 @@ typedef enum {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface MockPhotoSource : NSObject <TTPhotoSource> {
+@interface MockPhotoSource : TTURLRequestModel <TTPhotoSource> {
   MockPhotoSourceType _type;
-  NSMutableArray* _delegates;
   NSString* _title;
   NSMutableArray* _photos;
   NSArray* _tempPhotos;
   NSTimer* _fakeLoadTimer;
-  NSDate* _loadedTime;
 }
 
 - (id)initWithType:(MockPhotoSourceType)type title:(NSString*)title
-  photos:(NSArray*)photos photos2:(NSArray*)photos2;
+      photos:(NSArray*)photos photos2:(NSArray*)photos2;
 
 @end
 
@@ -32,15 +30,15 @@ typedef enum {
   id<TTPhotoSource> _photoSource;
   NSString* _thumbURL;
   NSString* _smallURL;
-  NSString* _url;
+  NSString* _URL;
   CGSize _size;
   NSInteger _index;
   NSString* _caption;
 }
 
-- (id)initWithURL:(NSString*)url smallURL:(NSString*)smallURL size:(CGSize)size;
+- (id)initWithURL:(NSString*)URL smallURL:(NSString*)smallURL size:(CGSize)size;
 
-- (id)initWithURL:(NSString*)url smallURL:(NSString*)smallURL size:(CGSize)size
-  caption:(NSString*)caption;
+- (id)initWithURL:(NSString*)URL smallURL:(NSString*)smallURL size:(CGSize)size
+      caption:(NSString*)caption;
 
 @end

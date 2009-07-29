@@ -3,9 +3,9 @@
 @implementation TabBarTestController
 
 - (void)dealloc {
-  [_tabBar1 release];
-  [_tabBar2 release];
-  [_tabBar3 release];
+  TT_RELEASE_SAFELY(_tabBar1);
+  TT_RELEASE_SAFELY(_tabBar2);
+  TT_RELEASE_SAFELY(_tabBar3);
   [super dealloc];
 }
 

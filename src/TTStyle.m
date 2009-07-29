@@ -33,8 +33,8 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_shape release];
-  [_font release];
+  TT_RELEASE_SAFELY(_shape);
+  TT_RELEASE_SAFELY(_font);
   [super dealloc];
 }
 
@@ -100,7 +100,7 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_next release];
+  TT_RELEASE_SAFELY(_next);
   [super dealloc];
 }
 
@@ -128,6 +128,11 @@ static const NSInteger kDefaultLightSource = 125;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // public
+
+- (TTStyle*)next:(TTStyle*)next {
+  self.next = next;
+  return self;
+}
 
 - (void)draw:(TTStyleContext*)context {
   [self.next draw:context];
@@ -243,6 +248,15 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// NSObject
+
+- (void)dealloc {
+  TT_RELEASE_SAFELY(_name);
+  TT_RELEASE_SAFELY(_style);
+  [super dealloc];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // TTStyle
 
 - (void)draw:(TTStyleContext*)context {
@@ -284,7 +298,7 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_shape release];
+  TT_RELEASE_SAFELY(_shape);
   [super dealloc];
 }
 
@@ -518,8 +532,9 @@ static const NSInteger kDefaultLightSource = 125;
 @implementation TTTextStyle
 
 @synthesize font = _font, color = _color, shadowColor = _shadowColor, shadowOffset = _shadowOffset,
-            minimumFontSize = _minimumFontSize, textAlignment = _textAlignment,
-            verticalAlignment = _verticalAlignment, lineBreakMode = _lineBreakMode;
+            minimumFontSize = _minimumFontSize, numberOfLines = _numberOfLines,
+            textAlignment = _textAlignment, verticalAlignment = _verticalAlignment,
+            lineBreakMode = _lineBreakMode;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSCoding
@@ -609,6 +624,26 @@ static const NSInteger kDefaultLightSource = 125;
   return style;
 }
 
++ (TTTextStyle*)styleWithFont:(UIFont*)font color:(UIColor*)color
+                minimumFontSize:(CGFloat)minimumFontSize
+                shadowColor:(UIColor*)shadowColor shadowOffset:(CGSize)shadowOffset
+                textAlignment:(UITextAlignment)textAlignment
+                verticalAlignment:(UIControlContentVerticalAlignment)verticalAlignment
+                lineBreakMode:(UILineBreakMode)lineBreakMode numberOfLines:(NSInteger)numberOfLines
+                next:(TTStyle*)next {
+  TTTextStyle* style = [[[self alloc] initWithNext:next] autorelease];
+  style.font = font;
+  style.color = color;
+  style.minimumFontSize = minimumFontSize;
+  style.shadowColor = shadowColor;
+  style.shadowOffset = shadowOffset;
+  style.textAlignment = textAlignment;
+  style.verticalAlignment = verticalAlignment;
+  style.lineBreakMode = lineBreakMode;
+  style.numberOfLines = numberOfLines;
+  return style;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private
 
@@ -641,6 +676,14 @@ static const NSInteger kDefaultLightSource = 125;
   return rect;
 }
 
+- (CGSize)sizeOfText:(NSString*)text withFont:(UIFont*)font size:(CGSize)size {
+  if (_numberOfLines == 1) {
+    return [text sizeWithFont:font];
+  } else {
+    return [text sizeWithFont:font constrainedToSize:size lineBreakMode:_lineBreakMode];
+  }
+}
+
 - (void)drawText:(NSString*)text context:(TTStyleContext*)context {
   CGContextRef ctx = UIGraphicsGetCurrentContext();
   CGContextSaveGState(ctx);
@@ -657,15 +700,21 @@ static const NSInteger kDefaultLightSource = 125;
   }
 
   CGRect rect = context.contentFrame;
-  CGRect titleRect = [self rectForText:text forSize:rect.size withFont:font];
   
-  titleRect.size = [text drawAtPoint:
-        CGPointMake(titleRect.origin.x+rect.origin.x, titleRect.origin.y+rect.origin.y)
-        forWidth:rect.size.width withFont:font
-        minFontSize:_minimumFontSize ? _minimumFontSize : font.pointSize
-        actualFontSize:nil lineBreakMode:_lineBreakMode
-        baselineAdjustment:UIBaselineAdjustmentAlignCenters];
-  context.contentFrame = titleRect;
+  if (_numberOfLines == 1) {
+    CGRect titleRect = [self rectForText:text forSize:rect.size withFont:font];
+    titleRect.size = [text drawAtPoint:
+          CGPointMake(titleRect.origin.x+rect.origin.x, titleRect.origin.y+rect.origin.y)
+          forWidth:rect.size.width withFont:font
+          minFontSize:_minimumFontSize ? _minimumFontSize : font.pointSize
+          actualFontSize:nil lineBreakMode:_lineBreakMode
+          baselineAdjustment:UIBaselineAdjustmentAlignCenters];
+    context.contentFrame = titleRect;
+  } else {
+    rect.size = [text drawInRect:rect withFont:font lineBreakMode:_lineBreakMode
+                      alignment:_textAlignment];
+    context.contentFrame = rect;
+  }
 
   CGContextRestoreGState(ctx);
 }
@@ -680,6 +729,7 @@ static const NSInteger kDefaultLightSource = 125;
     _minimumFontSize = 0;
     _shadowColor = nil;
     _shadowOffset = CGSizeZero;
+    _numberOfLines = 1;
     _textAlignment = UITextAlignmentCenter;
     _verticalAlignment = UIControlContentVerticalAlignmentCenter;
     _lineBreakMode = UILineBreakModeTailTruncation;
@@ -688,9 +738,9 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_font release];
-  [_color release];
-  [_shadowColor release];
+  TT_RELEASE_SAFELY(_font);
+  TT_RELEASE_SAFELY(_color);
+  TT_RELEASE_SAFELY(_shadowColor);
   [super dealloc];
 }
 
@@ -720,17 +770,13 @@ static const NSInteger kDefaultLightSource = 125;
     NSString* text = [context.delegate textForLayerWithStyle:self];
     UIFont* font = _font ? _font : context.font;
     
-    CGSize textSize;
-    
     CGFloat maxWidth = context.contentFrame.size.width;
-    if (maxWidth) {
-      textSize = [text sizeWithFont:font];
-      if (textSize.width > maxWidth) {
-        textSize.width = maxWidth;
-      }
-    } else {
-      textSize = [text sizeWithFont:font];
+    if (!maxWidth) {
+      maxWidth = CGFLOAT_MAX;
     }
+    CGFloat maxHeight = _numberOfLines ? _numberOfLines * font.lineHeight : CGFLOAT_MAX;
+    CGSize maxSize = CGSizeMake(maxWidth, maxHeight);
+    CGSize textSize = [self sizeOfText:text withFont:font size:maxSize];
     
     size.width += textSize.width;
     size.height += textSize.height;
@@ -855,9 +901,9 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_imageURL release];
-  [_image release];
-  [_defaultImage release];
+  TT_RELEASE_SAFELY(_imageURL);
+  TT_RELEASE_SAFELY(_image);
+  TT_RELEASE_SAFELY(_defaultImage);
   [super dealloc];
 }
 
@@ -948,7 +994,7 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_mask release];
+  TT_RELEASE_SAFELY(_mask);
   [super dealloc];
 }
 
@@ -1021,7 +1067,7 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_color release];
+  TT_RELEASE_SAFELY(_color);
   [super dealloc];
 }
 
@@ -1092,8 +1138,8 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_color1 release];
-  [_color2 release];
+  TT_RELEASE_SAFELY(_color1);
+  TT_RELEASE_SAFELY(_color2);
   [super dealloc];
 }
 
@@ -1165,7 +1211,7 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_color release];
+  TT_RELEASE_SAFELY(_color);
   [super dealloc];
 }
 
@@ -1267,7 +1313,7 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_color release];
+  TT_RELEASE_SAFELY(_color);
   [super dealloc];
 }
 
@@ -1405,7 +1451,7 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_color release];
+  TT_RELEASE_SAFELY(_color);
   [super dealloc];
 }
 
@@ -1478,6 +1524,35 @@ static const NSInteger kDefaultLightSource = 125;
   return style;
 }
 
++ (TTFourBorderStyle*)styleWithTop:(UIColor*)top width:(CGFloat)width next:(TTStyle*)next {
+  TTFourBorderStyle* style = [[[self alloc] initWithNext:next] autorelease];
+  style.top = top;
+  style.width = width;
+  return style;
+}
+
++ (TTFourBorderStyle*)styleWithRight:(UIColor*)right width:(CGFloat)width next:(TTStyle*)next {
+  TTFourBorderStyle* style = [[[self alloc] initWithNext:next] autorelease];
+  style.right = right;
+  style.width = width;
+  return style;
+}
+
++ (TTFourBorderStyle*)styleWithBottom:(UIColor*)bottom width:(CGFloat)width next:(TTStyle*)next {
+  TTFourBorderStyle* style = [[[self alloc] initWithNext:next] autorelease];
+  style.bottom = bottom;
+  style.width = width;
+  return style;
+}
+
++ (TTFourBorderStyle*)styleWithLeft:(UIColor*)left width:(CGFloat)width next:(TTStyle*)next {
+  TTFourBorderStyle* style = [[[self alloc] initWithNext:next] autorelease];
+  style.left = left;
+  style.width = width;
+  return style;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
@@ -1493,10 +1568,10 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_top release];
-  [_right release];
-  [_bottom release];
-  [_left release];
+  TT_RELEASE_SAFELY(_top);
+  TT_RELEASE_SAFELY(_right);
+  TT_RELEASE_SAFELY(_bottom);
+  TT_RELEASE_SAFELY(_left);
   [super dealloc];
 }
 
@@ -1616,8 +1691,8 @@ static const NSInteger kDefaultLightSource = 125;
 }
 
 - (void)dealloc {
-  [_highlight release];
-  [_shadow release];
+  TT_RELEASE_SAFELY(_highlight);
+  TT_RELEASE_SAFELY(_shadow);
   [super dealloc];
 }
 

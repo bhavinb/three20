@@ -7,8 +7,10 @@
 @property(nonatomic,readonly) UIColor* textColor;
 @property(nonatomic,readonly) UIColor* highlightedTextColor;
 @property(nonatomic,readonly) UIColor* placeholderTextColor;
+@property(nonatomic,readonly) UIColor* timestampTextColor;
 @property(nonatomic,readonly) UIColor* linkTextColor;
 @property(nonatomic,readonly) UIColor* moreLinkTextColor;
+@property(nonatomic,readonly) UIColor* selectedTextColor;
 @property(nonatomic,readonly) UIColor* photoCaptionTextColor;
 
 @property(nonatomic,readonly) UIColor* navigationBarTintColor;
@@ -25,6 +27,8 @@
 @property(nonatomic,readonly) UIColor* tableHeaderShadowColor;
 @property(nonatomic,readonly) UIColor* tableHeaderTintColor;
 @property(nonatomic,readonly) UIColor* tableSeparatorColor;
+@property(nonatomic,readonly) UIColor* tablePlainBackgroundColor;
+@property(nonatomic,readonly) UIColor* tableGroupedBackgroundColor;
 @property(nonatomic,readonly) UIColor* searchTableBackgroundColor;
 @property(nonatomic,readonly) UIColor* searchTableSeparatorColor;
 
@@ -41,7 +45,7 @@
 @property(nonatomic,readonly) UIFont* tableFont;
 @property(nonatomic,readonly) UIFont* tableSmallFont;
 @property(nonatomic,readonly) UIFont* tableTitleFont;
-@property(nonatomic,readonly) UIFont* tableTitleValueFont;
+@property(nonatomic,readonly) UIFont* tableTimestampFont;
 @property(nonatomic,readonly) UIFont* tableButtonFont;
 @property(nonatomic,readonly) UIFont* tableSummaryFont;
 @property(nonatomic,readonly) UIFont* photoCaptionFont;
@@ -49,10 +53,14 @@
 @property(nonatomic,readonly) UIFont* errorTitleFont;
 @property(nonatomic,readonly) UIFont* errorSubtitleFont;
 @property(nonatomic,readonly) UIFont* activityLabelFont;
+@property(nonatomic,readonly) UIFont* activityBannerFont;
+
+@property(nonatomic,readonly) UITableViewCellSelectionStyle tableSelectionStyle;
 
 - (TTStyle*)toolbarButtonForState:(UIControlState)state shape:(TTShape*)shape
             tintColor:(UIColor*)tintColor font:(UIFont*)font;
 
 - (TTStyle*)selectionFillStyle:(TTStyle*)next;
+
 
 @end

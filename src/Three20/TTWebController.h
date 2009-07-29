@@ -1,8 +1,8 @@
-#import "Three20/TTViewController.h"
+#import "Three20/TTModelViewController.h"
 
 @protocol TTWebControllerDelegate;
 
-@interface TTWebController : TTViewController <UIWebViewDelegate, UIActionSheetDelegate> {
+@interface TTWebController : TTModelViewController <UIWebViewDelegate, UIActionSheetDelegate> {
   id<TTWebControllerDelegate> _delegate;
   UIWebView* _webView;
   UIToolbar* _toolbar;
@@ -12,13 +12,15 @@
   UIBarButtonItem* _refreshButton;
   UIBarButtonItem* _stopButton;
   UIBarButtonItem* _activityItem;
+  NSURL* _loadingURL;
 }
 
 @property(nonatomic,assign) id<TTWebControllerDelegate> delegate;
-@property(nonatomic,readonly) NSURL* url;
+@property(nonatomic,readonly) NSURL* URL;
 @property(nonatomic,retain) UIView* headerView;
 
-- (void)openURL:(NSURL*)url;
+- (void)openURL:(NSURL*)URL;
+- (void)openRequest:(NSURLRequest*)request;
 
 @end
 

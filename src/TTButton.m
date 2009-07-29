@@ -54,11 +54,11 @@ static const CGFloat kVPadding = 7;
 
 - (void)dealloc {
   [_request cancel];
-  [_request release];
-  [_title release];
-  [_imageURL release];
-  [_image release];
-  [_style release];
+  TT_RELEASE_SAFELY(_request);
+  TT_RELEASE_SAFELY(_title);
+  TT_RELEASE_SAFELY(_imageURL);
+  TT_RELEASE_SAFELY(_image);
+  TT_RELEASE_SAFELY(_style);
   [super dealloc];
 }
 
@@ -75,30 +75,27 @@ static const CGFloat kVPadding = 7;
   self.image = response.image;
   [_button setNeedsDisplay];
   
-  [_request release];
-  _request = nil;
+  TT_RELEASE_SAFELY(_request);
 }
 
 - (void)request:(TTURLRequest*)request didFailLoadWithError:(NSError*)error {
-  [_request release];
-  _request = nil;
+  TT_RELEASE_SAFELY(_request);
 }
 
 - (void)requestDidCancelLoad:(TTURLRequest*)request {
-  [_request release];
-  _request = nil;
+  TT_RELEASE_SAFELY(_request);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // public
 
-- (void)setImageURL:(NSString*)url {
-  if (self.image && _imageURL && [url isEqualToString:_imageURL])
+- (void)setImageURL:(NSString*)URL {
+  if (self.image && _imageURL && [URL isEqualToString:_imageURL])
     return;
   
   [self stopLoading];
   [_imageURL release];
-  _imageURL = [url retain];
+  _imageURL = [URL retain];
   
   if (_imageURL.length) {
     [self reload];
@@ -138,13 +135,13 @@ static const CGFloat kVPadding = 7;
 // class public
 
 + (TTButton*)buttonWithStyle:(NSString*)selector {
-  TTButton* button = [[[TTButton alloc] initWithFrame:CGRectZero] autorelease];
+  TTButton* button = [[[TTButton alloc] init] autorelease];
   [button setStylesWithSelector:selector];
   return button;
 }
 
 + (TTButton*)buttonWithStyle:(NSString*)selector title:(NSString*)title {
-  TTButton* button = [[[TTButton alloc] initWithFrame:CGRectZero] autorelease];
+  TTButton* button = [[[TTButton alloc] init] autorelease];
   [button setTitle:title forState:UIControlStateNormal];
   [button setStylesWithSelector:selector];
   return button;
@@ -240,8 +237,8 @@ static const CGFloat kVPadding = 7;
 }
 
 - (void)dealloc {
-  [_content release];
-  [_font release];
+  TT_RELEASE_SAFELY(_content);
+  TT_RELEASE_SAFELY(_font);
   [super dealloc];
 }
 
@@ -354,6 +351,7 @@ static const CGFloat kVPadding = 7;
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
   TTButtonContent* content = [self contentForState:state];
   content.title = title;
+  [self setNeedsDisplay];
 }
 
 - (NSString*)imageForState:(UIControlState)state {
@@ -363,6 +361,7 @@ static const CGFloat kVPadding = 7;
 - (void)setImage:(NSString*)imageURL forState:(UIControlState)state {
   TTButtonContent* content = [self contentForState:state];
   content.imageURL = imageURL;
+  [self setNeedsDisplay];
 }
 
 - (TTStyle*)styleForState:(UIControlState)state {
@@ -372,6 +371,7 @@ static const CGFloat kVPadding = 7;
 - (void)setStyle:(TTStyle*)style forState:(UIControlState)state {
   TTButtonContent* content = [self contentForState:state];
   content.style = style;
+  [self setNeedsDisplay];
 }
 
 - (void)setStylesWithSelector:(NSString*)selector {

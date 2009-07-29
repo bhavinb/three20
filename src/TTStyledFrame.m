@@ -22,7 +22,7 @@
 }
 
 - (void)dealloc {
-  [_nextFrame release];
+  TT_RELEASE_SAFELY(_nextFrame);
   [super dealloc];
 }
 
@@ -104,8 +104,8 @@
 }
 
 - (void)dealloc {
-  [_firstChildFrame release];
-  [_style release];
+  TT_RELEASE_SAFELY(_firstChildFrame);
+  TT_RELEASE_SAFELY(_style);
   [super dealloc];
 }
 
@@ -184,6 +184,10 @@
   return self;
 }
 
+- (void)dealloc {
+  [super dealloc];
+}
+
 - (TTStyledInlineFrame*)inlineParentFrame {
   if ([_parentFrame isKindOfClass:[TTStyledInlineFrame class]]) {
     return (TTStyledInlineFrame*)_parentFrame;
@@ -213,8 +217,8 @@
 }
 
 - (void)dealloc {
-  [_text release];
-  [_font release];
+  TT_RELEASE_SAFELY(_text);
+  TT_RELEASE_SAFELY(_font);
   [super dealloc];
 }
 
@@ -244,6 +248,7 @@
 }
 
 - (void)dealloc {
+  TT_RELEASE_SAFELY(_style);
   [super dealloc];
 }
 

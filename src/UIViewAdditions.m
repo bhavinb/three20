@@ -26,6 +26,11 @@
 @end
 
 @implementation UIEventFake
+
+- (void)dealloc {
+  [super dealloc];
+}
+
 @end
 
 @interface UITouch (TTCategory)
@@ -211,6 +216,26 @@
   return CGRectMake(self.screenViewX, self.screenViewY, self.width, self.height);
 }
 
+- (CGPoint)origin {
+  return self.frame.origin;
+}
+
+- (void)setOrigin:(CGPoint)origin {
+  CGRect frame = self.frame;
+  frame.origin = origin;
+  self.frame = frame;
+}
+
+- (CGSize)size {
+  return self.frame.size;
+}
+
+- (void)setSize:(CGSize)size {
+  CGRect frame = self.frame;
+  frame.size = size;
+  self.frame = frame;
+}
+
 - (CGPoint)offsetFromView:(UIView*)otherView {
   CGFloat x = 0, y = 0;
   for (UIView* view = self; view && view != otherView; view = view.superview) {
@@ -230,25 +255,12 @@
     ? self.width : self.height;
 }
 
-- (UIScrollView*)findFirstScrollView {
-  if ([self isKindOfClass:[UIScrollView class]])
-    return (UIScrollView*)self;
-  
-  for (UIView* child in self.subviews) {
-    UIScrollView* it = [child findFirstScrollView];
-    if (it)
-      return it;
-  }
-  
-  return nil;
-}
-
-- (UIView*)firstViewOfClass:(Class)cls {
+- (UIView*)descendantOrSelfWithClass:(Class)cls {
   if ([self isKindOfClass:cls])
     return self;
   
   for (UIView* child in self.subviews) {
-    UIView* it = [child firstViewOfClass:cls];
+    UIView* it = [child descendantOrSelfWithClass:cls];
     if (it)
       return it;
   }
@@ -256,27 +268,17 @@
   return nil;
 }
 
-- (UIView*)firstParentOfClass:(Class)cls {
+- (UIView*)ancestorOrSelfWithClass:(Class)cls {
   if ([self isKindOfClass:cls]) {
     return self;
   } else if (self.superview) {
-    return [self.superview firstParentOfClass:cls];
+    return [self.superview ancestorOrSelfWithClass:cls];
   } else {
     return nil;
   }
 }
 
-- (UIView*)findChildWithDescendant:(UIView*)descendant {
-  for (UIView* view = descendant; view && view != self; view = view.superview) {
-    if (view.superview == self) {
-      return view;
-    }
-  }
-  
-  return nil;
-}
-
-- (void)removeSubviews {
+- (void)removeAllSubviews {
   while (self.subviews.count) {
     UIView* child = self.subviews.lastObject;
     [child removeFromSuperview];
@@ -293,6 +295,99 @@
 
   UIEvent *eventUp = [[[UIEvent alloc] initWithTouch:touch] autorelease];
   [touch.view touchesEnded:[NSSet setWithObject:touch] withEvent:eventUp];
+}
+
+- (CGRect)frameWithKeyboardSubtracted {
+  CGRect frame = self.frame;
+  if ([self.window performSelector:@selector(firstResponder)]) {
+    CGRect screenFrame = TTScreenBounds();
+    CGFloat keyboardTop = (screenFrame.size.height - TT_KEYBOARD_HEIGHT);
+    CGFloat screenBottom = self.screenY + frame.size.height;
+    CGFloat diff = screenBottom - keyboardTop;
+    if (diff > 0) {
+      frame.size.height -= diff;
+    }
+  }
+  return frame;
+}
+
+- (void)presentAsKeyboardAnimationDidStop {
+  CGRect screenFrame = TTScreenBounds();
+  CGRect bounds = CGRectMake(0, 0, screenFrame.size.width, self.height);
+  CGPoint centerBegin = CGPointMake(floor(screenFrame.size.width/2 - self.width/2),
+                                    screenFrame.size.height + floor(self.height/2));
+  CGPoint centerEnd = CGPointMake(floor(screenFrame.size.width/2 - self.width/2),
+                                  screenFrame.size.height - floor(self.height/2));
+
+  NSDictionary* userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+    [NSValue valueWithCGRect:bounds], UIKeyboardBoundsUserInfoKey,
+    [NSValue valueWithCGPoint:centerBegin], UIKeyboardCenterBeginUserInfoKey,
+    [NSValue valueWithCGPoint:centerEnd], UIKeyboardCenterEndUserInfoKey,
+    nil];
+    
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillShowNotification"
+                                        object:self userInfo:userInfo];
+}
+
+- (void)dismissAsKeyboardAnimationDidStop {
+  [self removeFromSuperview];
+  [self release];
+  [self.window release];
+}
+
+- (void)presentAsKeyboard {
+  CGRect screenFrame = TTScreenBounds();
+  CGRect windowFrame = CGRectMake(0, screenFrame.size.height, screenFrame.size.width, self.height);
+  
+  // Intentionally "leak" the window - you have to call dismissAsKeyboard to release it
+  UIWindow* window = [[UIWindow alloc] initWithFrame:windowFrame];
+  [window addSubview:self];
+
+  // Don't steal key window from the previous window when we make this window visible
+  UIWindow* keyWindow = [UIApplication sharedApplication].keyWindow;
+  [window makeKeyAndVisible];
+  [keyWindow makeKeyWindow];
+  
+  [UIView beginAnimations:nil context:nil];
+  [UIView setAnimationDuration:TT_TRANSITION_DURATION];
+  [UIView setAnimationDelegate:self];
+  [UIView setAnimationDidStopSelector:@selector(presentAsKeyboardAnimationDidStop)];
+  window.top -= window.height;
+  [UIView commitAnimations];
+}
+
+- (void)dismissAsKeyboard:(BOOL)animated {
+  [self retain];
+  CGRect screenFrame = TTScreenBounds();
+  CGRect bounds = CGRectMake(0, 0, screenFrame.size.width, self.height);
+  CGPoint centerBegin = CGPointMake(floor(screenFrame.size.width/2 - self.width/2),
+                                    screenFrame.size.height - floor(self.height/2));
+  CGPoint centerEnd = CGPointMake(floor(screenFrame.size.width/2 - self.width/2),
+                                  screenFrame.size.height + floor(self.height/2));
+
+  NSDictionary* userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+    [NSValue valueWithCGRect:bounds], UIKeyboardBoundsUserInfoKey,
+    [NSValue valueWithCGPoint:centerBegin], UIKeyboardCenterBeginUserInfoKey,
+    [NSValue valueWithCGPoint:centerEnd], UIKeyboardCenterEndUserInfoKey,
+    nil];
+    
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillHideNotification"
+                                        object:self userInfo:userInfo];
+
+  if (animated) {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:TT_TRANSITION_DURATION];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(dismissAsKeyboardAnimationDidStop)];
+  }
+  
+  self.window.top = screenFrame.size.height;
+
+  if (animated) {
+    [UIView commitAnimations];
+  } else {
+    [self dismissAsKeyboardAnimationDidStop];
+  }
 }
 
 @end
