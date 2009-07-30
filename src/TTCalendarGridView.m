@@ -147,7 +147,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
 - (void)setSelectedTile:(TTCalendarTileView *)tile
 {
   if (selectedTile != tile) {
-    [selectedTile setSelected:NO];
+    selectedTile.selected = NO;
     selectedTile = [tile retain];
     tile.selected = YES;
     [delegate didSelectDate:tile.date];

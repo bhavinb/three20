@@ -174,6 +174,9 @@
 
 - (void)setMarked:(BOOL)marked
 {
+  if ([self marked] == marked)
+    return; // nothing to do
+  
   if (marked)
     state |= TTCalendarTileStateMarked;
   else

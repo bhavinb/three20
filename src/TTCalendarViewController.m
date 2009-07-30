@@ -24,8 +24,8 @@
   // Configure the dataSource to display details for |date|.
   [(TTCalendarDataSource*)self.dataSource loadDate:date];
 
-  // Refresh the view to reflect the updated model/dataSource state.
-  [self invalidateModel];
+  // Refresh the details view underneath the calendar grid.
+  [self showModel:YES];
 }
 
 - (BOOL)shouldMarkTileForDate:(NSDate *)date
@@ -46,17 +46,6 @@
 }
 
 // -----------------------------------------------------------------------------------
-#pragma mark TTModelViewController
-
-// TODO: this still doesn't work right (it doesn't update until the user actually
-//       touches somewhere on the calendar--strange).
-- (void)didLoadModel
-{
-  [super didLoadModel];
-  [[self calendarView] refresh];
-}
-
-// -----------------------------------------------------------------------------------
 #pragma mark UIViewController
 
 - (void)loadView
@@ -65,6 +54,14 @@
   logic = [[TTCalendarLogic alloc] init];
   self.view = [[[TTCalendarView alloc] initWithFrame:TTNavigationFrame() delegate:self logic:logic] autorelease];
   self.tableView = [[self calendarView] tableView];
+}
+
+// -----------------------------------------------------------------------------------
+#pragma mark TTModelViewController
+
+- (void)didLoadModel {
+  [super didLoadModel];
+  [[self calendarView] refresh];
 }
 
 // make the compiler happy

@@ -14,4 +14,9 @@
   return NO;
 }
 
+- (void)tableViewDidLoadModel:(UITableView*)tableView {
+  [tableView reloadData];
+  [super tableViewDidLoadModel:tableView];
+}
+
 @end
