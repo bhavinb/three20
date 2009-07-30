@@ -172,7 +172,7 @@ static const CGSize kTileSize = { 46.f, 46.f };
   
   // Layout and configure the visible tiles/weeks for the currently selected month.
   NSArray *previousPartials = [logic daysInFinalWeekOfPreviousMonth];
-  NSArray *regularDays = [[logic daysInSelectedMonth] mutableCopy];
+  NSArray *regularDays = [logic daysInSelectedMonth];
   NSArray *followingPartials = [logic daysInFirstWeekOfFollowingMonth];
   
   NSMutableArray *allVisibleDays = [NSMutableArray array];
