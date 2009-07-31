@@ -602,7 +602,7 @@ static CGFloat kInsetWidth = 5;
     DECODE_OBJ(@"radius");
     DECODE_OBJ(@"pointLocation");
     DECODE_OBJ(@"pointAngle");
-    DECODE_OBJ(@"pointSize");
+    DECODE_SIZE(@"pointSize");
     END_DECODER();
     return self;
 }
@@ -613,7 +613,7 @@ static CGFloat kInsetWidth = 5;
     ENCODE_OBJ(@"radius");
     ENCODE_OBJ(@"pointLocation");
     ENCODE_OBJ(@"pointAngle");
-    ENCODE_OBJ(@"pointSize");
+    ENCODE_SIZE(@"pointSize");
     END_ENCODER();
 }
 
