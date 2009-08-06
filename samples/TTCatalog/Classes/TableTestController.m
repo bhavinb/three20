@@ -4,9 +4,65 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface TableTestDataSource : TTListDataSource
+{
+  NSMutableArray *delegates;
+  BOOL isLoading;
+  BOOL isLoaded;
+}
+- (void)purge;
+- (void)loadForever;
+- (void)fill;
+- (void)fail;
 @end
 
 @implementation TableTestDataSource
+
+- (void)purge
+{
+  TTLOG(@"purge");
+  isLoading = NO;
+  isLoaded = YES;
+  [self.items removeAllObjects];
+}
+- (void)loadForever
+{
+  TTLOG(@"loadForever");
+  isLoading = YES;
+  isLoaded = NO;
+}
+- (void)fill
+{
+  TTLOG(@"fill");
+  isLoading = NO;
+  isLoaded = YES;
+  self.items = [NSMutableArray arrayWithObjects:
+                     [TTTableTextItem itemWithText:@"Pomegranate"],
+                     [TTTableTextItem itemWithText:@"Kale"],
+                     [TTTableTextItem itemWithText:@"Blueberries"],
+                     [TTTableTextItem itemWithText:@"Tomato"],
+                     [TTTableTextItem itemWithText:@"Tempeh"],
+                     [TTTableTextItem itemWithText:@"Grapefruit"],
+                     nil];
+}
+- (void)fail
+{
+  TTLOG(@"fail");
+  isLoading = NO;
+  isLoaded = NO;
+  [self.items removeAllObjects];
+  [delegates perform:@selector(model:didFailLoadWithError:)
+          withObject:self
+          withObject:[NSError errorWithDomain:@"foo" code:42 userInfo:nil]];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// TTModel protocol
+- (NSMutableArray*)delegates {
+  if (!delegates) delegates = [[NSMutableArray alloc] init];
+  return delegates;
+}
+- (BOOL)isLoaded { return isLoaded; }
+- (BOOL)isLoading { return isLoading; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TTTableViewDataSource
@@ -16,11 +72,11 @@
 }
 
 - (NSString*)titleForEmpty {
-  return NSLocalizedString(@"No Friends", @"");
+  return NSLocalizedString(@"Empty", @"");
 }
 
 - (NSString*)subtitleForEmpty {
-  return NSLocalizedString(@"Try getting some friends.", @"");
+  return NSLocalizedString(@"There are no items in the datasource.", @"");
 }
 
 - (UIImage*)imageForError:(NSError*)error {
@@ -28,8 +84,15 @@
 }
 
 - (NSString*)subtitleForError:(NSError*)error {
-  return NSLocalizedString(@"There was an error loading your friends.", @"");
+  return NSLocalizedString(@"An error occurred while loading the datasource.", @"");
 }
+
+- (void)dealloc
+{
+  [delegates release];
+  [super dealloc];
+}
+
 
 @end
 
@@ -40,18 +103,25 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private
 
+- (TableTestDataSource *)ds { return (TableTestDataSource*)self.dataSource; }
+
 - (void)cycleModelState {
-//  if (self.modelState == TTModelStateNone) {
-//    self.modelState = TTModelStateLoading;
-//  } else if (self.modelState == TTModelStateLoading) {
-//    self.modelState = TTModelStateLoaded;
-//  } else if (self.modelState == TTModelStateLoaded) {
-//    self.modelState = TTModelStateLoaded|TTModelStateReloading;
-//  } else if (self.modelState == TTModelStateLoaded|TTModelStateReloading) {
-//    self.modelState = TTModelStateLoadedError;
-//  } else if (self.modelState == TTModelStateLoadedError) {
-//    self.modelState = TTModelStateNone;
-//  }
+  static int count = 0;
+  
+  self.modelError = nil;
+  
+  count == 0 ?
+    [[self ds] loadForever]:
+  count == 1 ?
+    [[self ds] fill]:
+  count == 2 ?
+    [[self ds] fail]:
+  count == 3 ?
+    [[self ds] purge]:
+  NULL;
+  
+  [self invalidateView];
+  count = (count + 1) % 4;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,21 +139,7 @@
 // TTModelViewController
 
 - (void)createModel {
-  self.dataSource = [[[TableTestDataSource alloc] init] autorelease];
-}
-
-- (void)modelDidChangeState {
-//  if (self.modelState == TTModelStateNone) {
-//    self.title = @"None";
-//  } else if (self.modelState == TTModelStateLoading) {
-//    self.title = @"Loading";
-//  } else if (self.modelState == TTModelStateLoaded) {
-//    self.title = @"Loaded";
-//  } else if (self.modelState == TTModelStateLoaded|TTModelStateReloading) {
-//    self.title = @"Reloading";
-//  } else if (self.modelState == TTModelStateLoadedError) {
-//    self.title = @"LoadedError";
-//  }
+  self.dataSource = [TableTestDataSource dataSourceWithItems:nil];
 }
 
 @end
